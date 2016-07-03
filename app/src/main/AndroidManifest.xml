@@ -21,7 +21,8 @@
         <activity android:name=".activity.MainActivity">
         </activity>
         <activity android:name=".activity.FirstActivity" />
-        <activity android:name=".activity.SplashActivity" />
+        <activity android:name=".activity.SplashActivity">
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

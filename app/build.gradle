@@ -11,10 +11,31 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    signingConfigs {
+//        release {
+//            storeFile file("release.keystore")
+//            storePassword
+//            keyAlias
+//            keyPassword
+//        }
+        develop {
+            storeFile file("debug.keystore")
+            // KeyHash
+            storePassword "kagerou"
+            keyAlias "androiddebugkey"
+            keyPassword "kagerou"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            signingConfig signingConfigs.develop
+            // デバッグ用のパッケージのパッケージ名に接尾辞を付ける
+//            applicationIdSuffix '.debug'
+            debuggable true
         }
     }
 }

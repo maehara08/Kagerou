@@ -11,33 +11,18 @@ import android.widget.Button;
 
 import com.developers.hack.cs.kagerou.R;
 
-public class SplashActivity extends AppCompatActivity implements View.OnClickListener{
-
-    public Button button;
+public class SplashActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.activity_splash);
+
         Handler hdl = new Handler();
-
         hdl.postDelayed(new splash(),5000);
-
-//        button = (Button)findViewById(R.id.button);
-//        button.setOnClickListener(this);
-
     }
 
-    @Override
-    public void onClick(View v) {
-        if(v == button){
-            Intent intent = new Intent(this,MainActivity.class);
-                startActivityForResult(intent,0);
-        }
-    }
     class splash implements Runnable{
         @Override
         public void run() {

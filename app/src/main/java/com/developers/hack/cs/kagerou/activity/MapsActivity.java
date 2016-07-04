@@ -1,8 +1,5 @@
 package com.developers.hack.cs.kagerou.activity;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.nfc.Tag;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -32,9 +29,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     double lat=35.6585805;
     double lng=139.7454329;
 
-    double lat2=34.6585805;
-    double lng2=138.7454329;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
+        // Add a marker in Tokyo Tower and move the camera
         LatLng tokyo_tower = new LatLng(lat, lng);
         mMap.addMarker(new MarkerOptions().position(tokyo_tower).title("Tokyo Tower"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(tokyo_tower));
@@ -75,7 +69,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         circle=mMap.addCircle(circleOptions);
     }
-
     @Override
     public void onResume(){
         super.onResume();
@@ -91,8 +84,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                        Random random = new Random();
                                        double addLat=(random.nextDouble())/10000;
                                        double addLng=(random.nextDouble())/10000;
-                                       Log.d("tag","addLat:"+addLat);
-                                       Log.d("tag","addLng:"+addLng);
                                        lat=lat+addLat;
                                        lng=lng+addLng;
                                        circle.setCenter(new LatLng(lat,lng));

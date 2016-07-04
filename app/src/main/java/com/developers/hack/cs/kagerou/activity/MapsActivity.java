@@ -1,19 +1,32 @@
 package com.developers.hack.cs.kagerou.activity;
 
+import android.graphics.Color;
+import android.nfc.Tag;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.developers.hack.cs.kagerou.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    Circle circle;
+
+    double lat=35.6585805;
+    double lng=139.7454329;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +53,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng tokyo_tower = new LatLng(lat, lng);
+        mMap.addMarker(new MarkerOptions().position(tokyo_tower).title("Tokyo Tower"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(tokyo_tower));
+
+        //circle
+        final CircleOptions circleOptions = new CircleOptions()
+                .center(new LatLng(lat, lng))
+//                .center(new LatLng(Lat, Lng))
+                .radius(1000000)
+                .strokeWidth(5)
+                .strokeColor(0xe1285577)
+                .fillColor(0xaa2f7b8e);
+
+        circle=mMap.addCircle(circleOptions);
     }
 }

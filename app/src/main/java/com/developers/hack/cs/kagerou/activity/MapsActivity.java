@@ -1,7 +1,9 @@
 package com.developers.hack.cs.kagerou.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.nfc.Tag;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,11 +24,16 @@ import java.util.TimerTask;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static String TAG="tag";
+
     private GoogleMap mMap;
     Circle circle;
 
     double lat=35.6585805;
     double lng=139.7454329;
+
+    double lat2=34.6585805;
+    double lng2=138.7454329;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +68,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final CircleOptions circleOptions = new CircleOptions()
                 .center(new LatLng(lat, lng))
 //                .center(new LatLng(Lat, Lng))
-                .radius(1000000)
+                .radius(100)
                 .strokeWidth(5)
                 .strokeColor(0xe1285577)
                 .fillColor(0xaa2f7b8e);
 
         circle=mMap.addCircle(circleOptions);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        final Handler handler = new Handler();
+        Timer timer = new Timer(false);
+        timer.schedule(new TimerTask() {
+                           @Override
+                           public void run() {
+                               handler.post(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       Random random = new Random();
+                                       double addLat=(random.nextDouble())/10000;
+                                       double addLng=(random.nextDouble())/10000;
+                                       Log.d("tag","addLat:"+addLat);
+                                       Log.d("tag","addLng:"+addLng);
+                                       lat=lat+addLat;
+                                       lng=lng+addLng;
+                                       circle.setCenter(new LatLng(lat,lng));
+                                   }
+                               });
+                           }
+                       },
+                1800,1800);
     }
 }

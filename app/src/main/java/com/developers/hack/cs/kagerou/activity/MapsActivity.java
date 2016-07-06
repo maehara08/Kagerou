@@ -3,7 +3,6 @@ package com.developers.hack.cs.kagerou.activity;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.developers.hack.cs.kagerou.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,13 +20,13 @@ import java.util.TimerTask;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static String TAG="tag";
+    private static String TAG = "tag";
 
     private GoogleMap mMap;
     Circle circle;
 
-    double lat=35.6585805;
-    double lng=139.7454329;
+    double lat = 35.6585805;
+    double lng = 139.7454329;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-
 
     /**
      * Manipulates the map once available.
@@ -61,16 +59,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //circle
         final CircleOptions circleOptions = new CircleOptions()
                 .center(new LatLng(lat, lng))
-//                .center(new LatLng(Lat, Lng))
                 .radius(100)
                 .strokeWidth(5)
                 .strokeColor(0xe1285577)
                 .fillColor(0xaa2f7b8e);
-
-        circle=mMap.addCircle(circleOptions);
+        circle = mMap.addCircle(circleOptions);
     }
+
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         final Handler handler = new Handler();
@@ -82,15 +79,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                    @Override
                                    public void run() {
                                        Random random = new Random();
-                                       double addLat=(random.nextDouble())/10000;
-                                       double addLng=(random.nextDouble())/10000;
-                                       lat=lat+addLat;
-                                       lng=lng+addLng;
-                                       circle.setCenter(new LatLng(lat,lng));
+                                       double addLat = (random.nextDouble()) / 10000;
+                                       double addLng = (random.nextDouble()) / 10000;
+                                       lat = lat + addLat;
+                                       lng = lng + addLng;
+                                       circle.setCenter(new LatLng(lat, lng));
                                    }
                                });
                            }
                        },
-                1800,1800);
+                1800, 1800);
     }
 }

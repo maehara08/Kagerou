@@ -1,4 +1,4 @@
-package com.developers.hack.cs.kagerou.activity;
+package com.developers.hack.cs.kagerou.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,10 +37,10 @@ import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class MapsActivity extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private static final String TAG = MapsActivity.class.getSimpleName();
+    private static final String TAG = KagerouMapFragment.class.getSimpleName();
 
     private static final int REQUEST_PERMISSION = 3;
 
@@ -59,9 +58,9 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, Google
     double lat = 35.6585805;
     double lng = 139.7454329;
 
-    public static MapsActivity getInstance() {
-        MapsActivity mapsActivity = new MapsActivity();
-        return mapsActivity;
+    public static KagerouMapFragment getInstance() {
+        KagerouMapFragment kagerouMapFragment = new KagerouMapFragment();
+        return kagerouMapFragment;
     }
 
     @Override
@@ -214,7 +213,7 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, Google
                 Executors.newScheduledThreadPool(1).schedule(new Runnable() {
                     @Override
                     public void run() {
-                        fusedLocationProviderApi.removeLocationUpdates(mGoogleApiClient, MapsActivity.this);
+                        fusedLocationProviderApi.removeLocationUpdates(mGoogleApiClient, KagerouMapFragment.this);
                     }
                 }, 60000, TimeUnit.MILLISECONDS);
 

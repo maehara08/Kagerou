@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.developers.hack.cs.kagerou.R;
+import com.developers.hack.cs.kagerou.fragment.KagerouMapFragment;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -11,6 +12,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-        getSupportFragmentManager().beginTransaction().add(R.id.frame_container,MapsActivity.getInstance()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_container, KagerouMapFragment.getInstance()).commit();
     }
 }

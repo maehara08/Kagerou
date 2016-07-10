@@ -11,5 +11,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_container,MapsActivity.getInstance()).commit();
     }
 }

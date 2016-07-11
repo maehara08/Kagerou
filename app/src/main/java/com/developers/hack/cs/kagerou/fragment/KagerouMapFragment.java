@@ -1,6 +1,7 @@
-package com.developers.hack.cs.kagerou.activity;
+package com.developers.hack.cs.kagerou.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -8,8 +9,11 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.developers.hack.cs.kagerou.R;
@@ -34,10 +38,10 @@ import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private static final String TAG = MapsActivity.class.getSimpleName();
+    private static final String TAG = KagerouMapFragment.class.getSimpleName();
 
     private static final int REQUEST_PERMISSION = 3;
 
@@ -48,6 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Location location;
     private long lastLocationTime;
     private LatLng mNowLatLng;
+    private Activity mContext;
 
     private GoogleMap mMap;
     Circle circle;
@@ -55,17 +60,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     double lat = 35.6585805;
     double lng = 139.7454329;
 
+    public static KagerouMapFragment getInstance() {
+        KagerouMapFragment kagerouMapFragment = new KagerouMapFragment();
+        return kagerouMapFragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        Log.d(TAG, "onCreate");
+        mContext=getActivity();
+        SupportMapFragment supportMapFragment = new SupportMapFragment();
+        getChildFragmentManager().beginTransaction().add(R.id.container, supportMapFragment).commit();
+        supportMapFragment.getMapAsync(this);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
+        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -77,6 +86,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mLocationRequest.setFastestInterval(16);
 
         fusedLocationProviderApi = LocationServices.FusedLocationApi;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_maps, null);
+        return view;
     }
 
     @Override
@@ -105,13 +121,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         startFusedLocation();
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         stopFusedLocation();
     }
@@ -166,12 +182,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected");
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "onConnected: return");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION);
+            ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION);
 
             return;
         }
@@ -200,18 +216,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Executors.newScheduledThreadPool(1).schedule(new Runnable() {
                     @Override
                     public void run() {
-                        fusedLocationProviderApi.removeLocationUpdates(mGoogleApiClient, MapsActivity.this);
+                        fusedLocationProviderApi.removeLocationUpdates(mGoogleApiClient, KagerouMapFragment.this);
                     }
                 }, 60000, TimeUnit.MILLISECONDS);
 
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast toast = Toast.makeText(this, "例外が発生、位置情報のPermissionを許可していますか？", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(mContext, "例外が発生、位置情報のPermissionを許可していますか？", Toast.LENGTH_SHORT);
                 toast.show();
 
                 //MainActivityに戻す
-                finish();
+//                finish();
             }
         }
     }

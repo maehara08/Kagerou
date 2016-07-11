@@ -1,6 +1,7 @@
 package com.developers.hack.cs.kagerou.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -51,6 +52,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     private Location location;
     private long lastLocationTime;
     private LatLng mNowLatLng;
+    private Activity mContext;
 
     private GoogleMap mMap;
     Circle circle;
@@ -67,11 +69,12 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
+        mContext=getActivity();
         SupportMapFragment supportMapFragment = new SupportMapFragment();
         getChildFragmentManager().beginTransaction().add(R.id.container, supportMapFragment).commit();
         supportMapFragment.getMapAsync(this);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -179,12 +182,12 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected");
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "onConnected: return");
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION);
+            ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION);
 
             return;
         }
@@ -220,7 +223,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast toast = Toast.makeText(getActivity(), "例外が発生、位置情報のPermissionを許可していますか？", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(mContext, "例外が発生、位置情報のPermissionを許可していますか？", Toast.LENGTH_SHORT);
                 toast.show();
 
                 //MainActivityに戻す

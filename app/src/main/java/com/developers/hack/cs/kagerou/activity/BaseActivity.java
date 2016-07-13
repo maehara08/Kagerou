@@ -21,7 +21,7 @@ public class BaseActivity extends AppCompatActivity {
         mFragmentManager=getSupportFragmentManager();
         mTransaction=mFragmentManager.beginTransaction();
         mTransaction.add(R.id.frame_container, KagerouMapFragment.getInstance());
-        mTransaction.add(R.id.frame_container, new DrawerFragment());
+//        mTransaction.add(R.id.frame_container, new DrawerFragment());
         mTransaction.commit();
     }
 }

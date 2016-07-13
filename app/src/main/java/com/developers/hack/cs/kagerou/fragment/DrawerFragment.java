@@ -77,30 +77,30 @@ public class DrawerFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ArrayList<String> data = new ArrayList<>();
-
-        data.add("list1");
-        data.add("list2");
-        data.add("list3");
-
-        ListView listView = (ListView)view.findViewById(R.id.listView);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, data);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent,
-                                    View view, int pos, long id) {
-
-                switch (pos){
-                    case 0:
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                }
-            }
-        });
+//        ArrayList<String> data = new ArrayList<>();
+//
+//        data.add("list1");
+//        data.add("list2");
+//        data.add("list3");
+//
+//        ListView listView = (ListView)view.findViewById(R.id.listView);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, data);
+//        listView.setAdapter(adapter);
+//
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> parent,
+//                                    View view, int pos, long id) {
+//
+//                switch (pos){
+//                    case 0:
+//                        break;
+//                    case 1:
+//                        break;
+//                    case 2:
+//                        break;
+//                }
+//            }
+//        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

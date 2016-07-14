@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.developers.hack.cs.kagerou.R;
@@ -43,6 +44,15 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
+        Log.d(TAG,"onCheckedChanged");
+
+        if(checkedId != -1){
+            RadioButton radioButton = (RadioButton)findViewById(checkedId);
+            String gender = radioButton.getText().toString();
+            Log.d(TAG,gender);
+        }else{
+            Log.d(TAG,"not select");
+        }
 
     }
 }

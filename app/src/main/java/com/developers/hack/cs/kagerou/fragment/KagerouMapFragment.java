@@ -11,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +56,9 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     private long lastLocationTime;
     private LatLng mNowLatLng;
     private Activity mContext;
+
+    private FragmentManager mFragmentManager;
+    private FragmentTransaction mTransaction;
 
     private FloatingActionButton fab;
 
@@ -99,6 +104,10 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 Log.d(TAG,"click fab");
+                mFragmentManager = getFragmentManager();
+                mTransaction = mFragmentManager.beginTransaction();
+                mTransaction.add(R.id.frame_container, new PostFragment());
+                mTransaction.commit();
             }
         });
         return view;

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.developers.hack.cs.kagerou.activity.SignUpActivity">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/userName_editText"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="89dp"
+        android:hint="UserName" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/password_editText"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/userName_editText"
+        android:layout_alignLeft="@+id/userName_editText"
+        android:layout_alignStart="@+id/userName_editText"
+        android:hint="Password" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/age_editText"
+        android:layout_below="@+id/password_editText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:hint="Age" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        android:id="@+id/signUp_button"
+        android:layout_marginTop="35dp"
+        android:layout_below="@+id/radioGroup"
+        android:layout_centerHorizontal="true" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/age_editText"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/radioGroup">
+        <TextView
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:text="Gender"
+            android:id="@+id/gender_textView"
+            android:layout_below="@+id/age_editText"
+            android:layout_alignLeft="@+id/age_editText"
+            android:layout_alignStart="@+id/age_editText"
+            android:layout_marginLeft="63dp"
+            android:layout_marginStart="63dp"
+            android:layout_marginTop="27dp" />
+
+        <RadioButton
+            android:layout_width="81dp"
+            android:layout_height="wrap_content"
+            android:text="Male"
+            android:id="@+id/male_radioButton"
+            android:checked="false"
+            android:layout_above="@+id/female_radioButton"
+            android:layout_alignLeft="@+id/female_radioButton"
+            android:layout_alignStart="@+id/female_radioButton"
+            android:layout_gravity="center_horizontal" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female"
+            android:id="@+id/female_radioButton"
+            android:checked="false"
+            android:layout_centerVertical="true"
+            android:layout_alignLeft="@+id/gender_textView"
+            android:layout_alignStart="@+id/gender_textView"
+            android:layout_gravity="center_horizontal" />
+
+    </RadioGroup>
+
+
+</RelativeLayout>

@@ -1,8 +1,8 @@
 package com.developers.hack.cs.kagerou.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,9 +18,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText userName_editText;
     private EditText password_editText;
 
-    public void login(){
-        Log.d(TAG,"login");
-        Intent intent = new Intent(getApplication(),MapsActivity.class);
+    public void login() {
+        Log.d(TAG, "login");
+        Intent intent = new Intent(getApplication(), BaseActivity.class);
         startActivity(intent);
     }
 
@@ -29,17 +29,17 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        login_button = (Button)findViewById(R.id.login_button);
-        signUp_button = (Button)findViewById(R.id.signUp_button);
-        userName_editText = (EditText)findViewById(R.id.userName_editText);
-        password_editText = (EditText)findViewById(R.id.userName_editText);
+        login_button = (Button) findViewById(R.id.login_button);
+        signUp_button = (Button) findViewById(R.id.signUp_button);
+        userName_editText = (EditText) findViewById(R.id.userName_editText);
+        password_editText = (EditText) findViewById(R.id.userName_editText);
         final String userName = userName_editText.getText().toString();
 
-        login_button.setOnClickListener(new View.OnClickListener(){
+        login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"login_button_onClick");
-                Intent intent = new Intent(getApplication(),MapsActivity.class);
+                Log.d(TAG, "login_button_onClick");
+                Intent intent = new Intent(getApplication(), BaseActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -48,8 +48,8 @@ public class LoginActivity extends AppCompatActivity {
         signUp_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"signUp_button_onClick");
-                Intent intent = new Intent(getApplication(),SignUpActivity.class);
+                Log.d(TAG, "signUp_button_onClick");
+                Intent intent = new Intent(getApplication(), SignUpActivity.class);
                 startActivity(intent);
             }
         });

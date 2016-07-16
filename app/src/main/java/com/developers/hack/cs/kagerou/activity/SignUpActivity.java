@@ -1,8 +1,8 @@
 package com.developers.hack.cs.kagerou.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,15 +27,15 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener(this);
 
-        signUp_button = (Button)findViewById(R.id.signUp_button);
+        signUp_button = (Button) findViewById(R.id.signUp_button);
         signUp_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"signUp_button_onClick");
-                Intent intent = new Intent(getApplication(),MapsActivity.class);
+                Log.d(TAG, "signUp_button_onClick");
+                Intent intent = new Intent(getApplication(), BaseActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -44,15 +44,14 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        Log.d(TAG,"onCheckedChanged");
+        Log.d(TAG, "onCheckedChanged");
 
-        if(checkedId != -1){
-            RadioButton radioButton = (RadioButton)findViewById(checkedId);
+        if (checkedId != -1) {
+            RadioButton radioButton = (RadioButton) findViewById(checkedId);
             String gender = radioButton.getText().toString();
-            Log.d(TAG,gender);
-        }else{
-            Log.d(TAG,"not select");
+            Log.d(TAG, gender);
+        } else {
+            Log.d(TAG, "not select");
         }
-
     }
 }

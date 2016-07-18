@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.developers.hack.cs.kagerou.fragment.PostFragment"
+    android:background="#ffffff">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/editText"
+        android:layout_gravity="center_horizontal"
+        android:hint="title"
+        android:singleLine="true"
+        android:layout_weight="1"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/editText2"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="4"
+        android:layout_margin="8dp"
+        android:hint="本文"
+        android:gravity="left|top" />
+
+    <Button
+        android:layout_width="145dp"
+        android:layout_height="wrap_content"
+        android:text="投稿"
+        android:id="@+id/post"
+        android:layout_gravity="center_vertical|right"
+        android:layout_margin="8dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"></FrameLayout>
+</LinearLayout>

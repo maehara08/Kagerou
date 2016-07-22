@@ -194,7 +194,14 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                 .strokeWidth(5)
                 .strokeColor(0xe1285577)
                 .fillColor(0xaa2f7b8e);
+        mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+            @Override
+            public void onCircleClick(Circle circle) {
+                Log.d(TAG,"onClickCircle");
+            }
+        });
         circle = mMap.addCircle(circleOptions);
+        circle.setClickable(true);
     }
 
 

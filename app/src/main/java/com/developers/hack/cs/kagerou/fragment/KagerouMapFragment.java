@@ -77,7 +77,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
-        mContext=getActivity();
+        mContext = getActivity();
         SupportMapFragment supportMapFragment = new SupportMapFragment();
         getChildFragmentManager().beginTransaction().add(R.id.container, supportMapFragment).commit();
         supportMapFragment.getMapAsync(this);
@@ -100,13 +100,14 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_maps, null);
-        fab = (FloatingActionButton)view.findViewById(R.id.fab);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                Log.d(TAG,"click fab");
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "click fab");
                 mFragmentManager = getFragmentManager();
                 mTransaction = mFragmentManager.beginTransaction();
-                mTransaction.add(R.id.frame_container, new PostFragment());
+                mTransaction.add(R.id.container, new PostFragment());
                 mTransaction.addToBackStack(null);
                 mTransaction.commit();
             }
@@ -197,7 +198,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
             @Override
             public void onCircleClick(Circle circle) {
-                Log.d(TAG,"onClickCircle");
+                Log.d(TAG, "onClickCircle");
             }
         });
         circle = mMap.addCircle(circleOptions);

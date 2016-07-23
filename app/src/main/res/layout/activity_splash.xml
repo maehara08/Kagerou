@@ -16,11 +16,16 @@
         android:layout_height="match_parent"
         android:background="#3a3939">
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"></FrameLayout>
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/imageView"
-            android:src="@drawable/kagerou_icon_256"
+            android:src="@drawable/kagerou_icon_192"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:layout_weight="6"
@@ -37,7 +42,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"></FrameLayout>
+            android:layout_weight="3"></FrameLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

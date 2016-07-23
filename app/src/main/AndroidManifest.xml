@@ -43,8 +43,10 @@
         <activity android:name=".activity.BaseActivity" />
         <activity
             android:name=".activity.LoginActivity"
-            android:label="ログイン"/>
-        <activity android:name=".activity.SignUpActivity"></activity>
+            android:label="ログイン" />
+        <activity
+            android:name=".activity.SignUpActivity"
+            android:label="新規登録"></activity>
     </application>
 
 </manifest>

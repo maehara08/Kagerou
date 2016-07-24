@@ -10,89 +10,120 @@
     tools:context="com.developers.hack.cs.kagerou.activity.SignUpActivity">
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/userName_editText"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="89dp"
-        android:hint="UserName" />
+        android:hint="ユーザー名"
+        android:textSize="18dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/password_editText"
-        android:layout_marginTop="30dp"
+        android:hint="パスワード"
         android:layout_below="@+id/userName_editText"
-        android:layout_alignLeft="@+id/userName_editText"
-        android:layout_alignStart="@+id/userName_editText"
-        android:hint="Password" />
+        android:textSize="18dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
         android:id="@+id/age_editText"
         android:layout_below="@+id/password_editText"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="45dp"
-        android:hint="Age" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign Up"
-        android:id="@+id/signUp_button"
-        android:layout_marginTop="35dp"
-        android:layout_below="@+id/radioGroup"
-        android:layout_centerHorizontal="true" />
+        android:hint="年齢"
+        android:textSize="18dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp" />
 
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/radioGroup"
         android:layout_below="@+id/age_editText"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/radioGroup">
+        android:layout_alignLeft="@+id/age_editText"
+        android:layout_alignStart="@+id/age_editText"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="5dp">
         <TextView
-            android:layout_width="130dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Gender"
+            android:text="性別"
             android:id="@+id/gender_textView"
             android:layout_below="@+id/age_editText"
             android:layout_alignLeft="@+id/age_editText"
             android:layout_alignStart="@+id/age_editText"
-            android:layout_marginLeft="63dp"
-            android:layout_marginStart="63dp"
-            android:layout_marginTop="27dp" />
+            android:textSize="18dp" />
 
         <RadioButton
-            android:layout_width="81dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Male"
+            android:text="男性"
             android:id="@+id/male_radioButton"
             android:checked="false"
             android:layout_above="@+id/female_radioButton"
             android:layout_alignLeft="@+id/female_radioButton"
             android:layout_alignStart="@+id/female_radioButton"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/bright_foreground_disabled_material_light"
+            android:textSize="18dp" />
 
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Female"
+            android:text="女性"
             android:id="@+id/female_radioButton"
             android:checked="false"
             android:layout_centerVertical="true"
             android:layout_alignLeft="@+id/gender_textView"
             android:layout_alignStart="@+id/gender_textView"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/bright_foreground_disabled_material_light"
+            android:textSize="18dp" />
 
     </RadioGroup>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></FrameLayout>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="登録"
+            android:id="@+id/signUp_button"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="false"
+            android:textSize="15dp"
+            android:textColor="#ffffff"
+            android:background="#e74d00"
+            android:layout_weight="8" />
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
 
 
 </RelativeLayout>

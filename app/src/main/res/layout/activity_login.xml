@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/userName_editText"
+        android:id="@+id/user_name_edit_text"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
@@ -29,21 +29,23 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/password_editText"
+        android:id="@+id/password_edit_text"
         android:hint="パスワード"
         android:textSize="18dp"
-        android:layout_below="@+id/userName_editText"
-        android:layout_centerHorizontal="true"
         android:layout_marginRight="15dp"
         android:layout_marginLeft="15dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:layout_marginTop="35dp"
+        android:layout_below="@+id/user_name_edit_text"
+        android:layout_alignParentStart="true" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/password_editText"
-        android:id="@+id/linearLayout2">
+        android:id="@+id/linearLayout2"
+        android:layout_above="@+id/or"
+        android:layout_alignParentEnd="true">
 
         <FrameLayout
             android:layout_width="0dp"
@@ -57,7 +59,7 @@
             android:text="ログイン"
             android:onClick="login()"
             android:layout_gravity="center"
-            android:backgroundTint="#0086C9"
+            android:background="#0086C9"
             android:textColor="#ffffff"
             android:layout_weight="8"
             android:textSize="16dp" />
@@ -78,16 +80,17 @@
         android:textSize="15dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:layout_below="@+id/linearLayout2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_above="@+id/linearLayout"
+        android:layout_alignParentStart="true" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout"
-        android:layout_below="@+id/or">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="128dp">
 
         <FrameLayout
             android:layout_width="0dp"
@@ -100,7 +103,7 @@
             android:text="新規登録"
             android:id="@+id/signUp_button"
             android:gravity="center"
-            android:backgroundTint="#e74d00"
+            android:background="#e74d00"
             android:textColor="#ffffff"
             android:layout_weight="8"
             android:textSize="16dp" />

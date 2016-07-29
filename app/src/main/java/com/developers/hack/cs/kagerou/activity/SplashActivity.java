@@ -5,14 +5,17 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Handler;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 
 import com.developers.hack.cs.kagerou.R;
 
 public class SplashActivity extends Activity {
+    private static final String TAG=SplashActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);

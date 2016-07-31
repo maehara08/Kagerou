@@ -2,6 +2,7 @@ package com.developers.hack.cs.kagerou.activity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -39,6 +40,9 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
         setContentView(R.layout.activity_sign_up);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        userName_editText = (EditText) findViewById(R.id.userName_editText);
+        password_editText = (EditText) findViewById(R.id.password_editText);
+        age_editText = (EditText) findViewById(R.id.age_editText);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener(this);
 
@@ -47,9 +51,18 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "signUp_button_onClick");
-                Intent intent = new Intent(getApplication(), BaseActivity.class);
-                startActivity(intent);
-                finish();
+                new AsyncTask<Void, Void, String>(){
+                    @Override
+                    protected String doInBackground(Void... params) {
+                        postSignUp();
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(String s) {
+                        Log.d(TAG,"onPostExecute");
+                    }
+                }.execute();
             }
         });
     }
@@ -73,10 +86,16 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
         final String password = password_editText.getText().toString();
         final String age = age_editText.getText().toString();
         int checkedId = radioGroup.getCheckedRadioButtonId();
-        final String sex = ((RadioButton)findViewById(checkedId)).getText().toString();
+        String mSex = "";
 
         if(userName == null || password == null || age == null || checkedId == -1){
             return;
+        }
+
+        if(checkedId == R.id.male_radioButton){
+            mSex = "male";
+        }else if(checkedId == R.id.female_radioButton){
+            mSex = "female";
         }
 
         String result = null;
@@ -84,7 +103,7 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
                 .add("name",userName)
                 .add("password",password)
                 .add("age",age)
-                .add("sex",sex)
+                .add("sex",mSex)
                 .build();
         Request request = new Request.Builder()
                 .url("http://210.192.48.244"+"/login/signup")

@@ -87,7 +87,7 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
                 .add("gender",gender)
                 .build();
         Request request = new Request.Builder()
-                .url(getString(R.string.endpoint)+"/login/signup")
+                .url("http://210.192.48.244"+"/login/signup")
                 .post(formbody)
                 .build();
         client.newCall(request).enqueue(new Callback() {

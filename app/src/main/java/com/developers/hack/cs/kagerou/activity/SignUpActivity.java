@@ -73,7 +73,7 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
         final String password = password_editText.getText().toString();
         final String age = age_editText.getText().toString();
         int checkedId = radioGroup.getCheckedRadioButtonId();
-        final String gender = ((RadioButton)findViewById(checkedId)).getText().toString();
+        final String sex = ((RadioButton)findViewById(checkedId)).getText().toString();
 
         if(userName == null || password == null || age == null || checkedId == -1){
             return;
@@ -84,7 +84,7 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
                 .add("name",userName)
                 .add("password",password)
                 .add("age",age)
-                .add("gender",gender)
+                .add("sex",sex)
                 .build();
         Request request = new Request.Builder()
                 .url("http://210.192.48.244"+"/login/signup")

@@ -3,7 +3,6 @@ package com.developers.hack.cs.kagerou.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -86,6 +85,7 @@ public class PostFragment extends Fragment {
                 mFragmentManager = getFragmentManager();
                 mTransaction=mFragmentManager.beginTransaction();
                 mTransaction.remove(PostFragment.this);
+                mTransaction.add(R.id.frame_container, new KagerouMapFragment());
                 mTransaction.commit();
             }
         });

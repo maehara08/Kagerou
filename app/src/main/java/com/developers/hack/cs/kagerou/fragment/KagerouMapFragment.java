@@ -3,6 +3,7 @@ package com.developers.hack.cs.kagerou.fragment;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.developers.hack.cs.kagerou.MyDBEntity;
+import com.developers.hack.cs.kagerou.MyDBHelper;
+import com.developers.hack.cs.kagerou.MyDao;
 import com.developers.hack.cs.kagerou.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -35,6 +39,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,6 +52,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     private static final String TAG = KagerouMapFragment.class.getSimpleName();
 
     private static final int REQUEST_PERMISSION = 3;
+
+    private MyDao dao;
 
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -65,8 +72,10 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     private GoogleMap mMap;
     Circle circle;
 
-    double lat = 35.6585805;
-    double lng = 139.7454329;
+    double lat;
+    double lng;
+
+    int firstTime=0;
 
     public static KagerouMapFragment getInstance() {
         KagerouMapFragment kagerouMapFragment = new KagerouMapFragment();
@@ -77,6 +86,17 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
+        MyDBHelper helper = new MyDBHelper(getContext(), null, 1);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        dao = new MyDao(db);
+        if(firstTime==0){
+            dao.insert(35.681298,139.76624689999994,800,0xaaa8ab39,0xe1a8ab39);
+            dao.insert(35.6581003,139.70174169999996,700,0xaa359f79,0xe1359f79);
+            dao.insert(35.633998,139.715828,950,0xaa832f8d,0xe1832f8d);
+            dao.insert(35.6284713,139.73875969999995,1000,0xaa892e2f,0xe1892e2f);
+            dao.insert(35.6953874,139.7000494,1300,0xaa3551a0,0xe13551a0);
+            firstTime=1;
+        }
         mContext = getActivity();
         SupportMapFragment supportMapFragment = new SupportMapFragment();
         getChildFragmentManager().beginTransaction().add(R.id.container, supportMapFragment).commit();
@@ -127,12 +147,17 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                                handler.post(new Runnable() {
                                    @Override
                                    public void run() {
-                                       Random random = new Random();
-                                       double addLat = (random.nextDouble()) / 10000;
-                                       double addLng = (random.nextDouble()) / 10000;
-                                       lat = lat + addLat;
-                                       lng = lng + addLng;
-                                       circle.setCenter(new LatLng(lat, lng));
+                                       List<MyDBEntity> entityList = dao.findAll();
+                                       for(MyDBEntity entity:entityList) {
+                                           Random random = new Random();
+                                           double addLat = (random.nextDouble()-0.5) / 5000;
+                                           double addLng = (random.nextDouble()-0.5) / 5000;
+                                           lat = entity.getLatValue() + addLat;
+                                           lng = entity.getLngValue() + addLng;
+                                           entity.setLatValue(lat);
+                                           entity.setLngValue(lng);
+                                           circle.setCenter(new LatLng(entity.getLatValue(), entity.getLatValue()));
+                                       }
                                    }
                                });
                            }
@@ -183,26 +208,24 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Tokyo Tower and move the camera
-        LatLng tokyo_tower = new LatLng(lat, lng);
-        mMap.addMarker(new MarkerOptions().position(tokyo_tower).title("Tokyo Tower"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(tokyo_tower));
+        List<MyDBEntity> entityList = dao.findAll();
+        for(MyDBEntity entity:entityList) {
+            final CircleOptions circleOptions = new CircleOptions()
+                    .center(new LatLng(entity.getLatValue(), entity.getLngValue()))
+                    .radius(entity.getRadiusValue())
+                    .strokeWidth(5)
+                    .strokeColor(entity.getOColorValue())
+                    .fillColor(entity.getIColorValue());
+            circle = mMap.addCircle(circleOptions);
+            circle.setClickable(true);
+        }
 
-        //circle
-        final CircleOptions circleOptions = new CircleOptions()
-                .center(new LatLng(lat, lng))
-                .radius(100)
-                .strokeWidth(5)
-                .strokeColor(0xe1285577)
-                .fillColor(0xaa2f7b8e);
         mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
             @Override
             public void onCircleClick(Circle circle) {
                 Log.d(TAG, "onClickCircle");
             }
         });
-        circle = mMap.addCircle(circleOptions);
-        circle.setClickable(true);
     }
 
 

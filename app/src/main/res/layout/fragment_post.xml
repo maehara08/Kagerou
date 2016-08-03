@@ -11,7 +11,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/title_editText"
         android:layout_gravity="center_horizontal"
         android:hint="タイトル"
         android:singleLine="true"
@@ -23,14 +23,14 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:id="@+id/editText2"
+        android:id="@+id/content_editText"
         android:layout_gravity="center_horizontal"
         android:hint="あなたの悩みは？"
         android:gravity="left|top"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:textSize="16dp"
-        android:layout_below="@+id/editText"
+        android:layout_below="@+id/title_editText"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/post" />
 

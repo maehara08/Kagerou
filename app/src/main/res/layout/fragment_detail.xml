@@ -142,7 +142,7 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/editText"
+                    android:id="@+id/comment"
                     android:layout_weight="1"
                     android:hint="コメントを入力"
                     android:paddingLeft="8dp"

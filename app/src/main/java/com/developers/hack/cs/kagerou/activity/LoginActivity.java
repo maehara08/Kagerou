@@ -107,18 +107,16 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(Call call, Response respxonse) throws IOException {
-                if (respxonse.isSuccessful()) {
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
                     Intent intent = new Intent(getApplication(), BaseActivity.class);
                     startActivity(intent);
                     finish();
                     showToast("Login 成功");
                 } else {
                     showToast("Login 失敗");
-
                 }
-                respxonse.close();
-
+                response.close();
             }
         });
     }

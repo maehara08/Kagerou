@@ -128,19 +128,25 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public void onResume() {
         super.onResume();
 
-//        final Handler handler = new Handler();
-//        Timer timer = new Timer(false);
-//        timer.schedule(new TimerTask() {
-//                           @Override
-//                           public void run() {
-//                               handler.post(new Runnable() {
-//                                   @Override
-//                                   public void run() {
-//                                   }
-//                               });
-//                           }
-//                       },
-//                1800, 1800);
+        final Handler handler = new Handler();
+        Timer timer = new Timer(false);
+        timer.schedule(new TimerTask() {
+                           @Override
+                           public void run() {
+                               handler.post(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       Random random = new Random();
+                                       double addLat = (random.nextDouble()) / 10000;
+                                       double addLng = (random.nextDouble()) / 10000;
+                                       lat = lat + addLat;
+                                       lng = lng + addLng;
+                                       circle.setCenter(new LatLng(lat, lng));
+                                   }
+                               });
+                           }
+                       },
+                1800, 1800);
     }
 
     @Override

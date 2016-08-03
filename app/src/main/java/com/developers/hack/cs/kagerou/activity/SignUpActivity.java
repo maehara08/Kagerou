@@ -51,7 +51,7 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "signUp_button_onClick");
-                new AsyncTask<Void, Void, String>(){
+                new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... params) {
                         postSignUp();
@@ -60,7 +60,7 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
 
                     @Override
                     protected void onPostExecute(String s) {
-                        Log.d(TAG,"onPostExecute");
+                        Log.d(TAG, "onPostExecute");
                     }
                 }.execute();
             }
@@ -80,7 +80,7 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
         }
     }
 
-    private void postSignUp(){
+    private void postSignUp() {
         OkHttpClient client = new OkHttpClient();
         final String userName = userName_editText.getText().toString();
         final String password = password_editText.getText().toString();
@@ -88,41 +88,42 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
         int checkedId = radioGroup.getCheckedRadioButtonId();
         String mSex = "";
 
-        if(userName == null || password == null || age == null || checkedId == -1){
+        if (userName == null || password == null || age == null || checkedId == -1) {
             return;
         }
 
-        if(checkedId == R.id.male_radioButton){
+        if (checkedId == R.id.male_radioButton) {
             mSex = "male";
-        }else if(checkedId == R.id.female_radioButton){
+        } else if (checkedId == R.id.female_radioButton) {
             mSex = "female";
         }
 
         String result = null;
         RequestBody formbody = new FormBody.Builder()
-                .add("name",userName)
-                .add("password",password)
-                .add("age",age)
-                .add("sex",mSex)
+                .add("name", userName)
+                .add("password", password)
+                .add("age", age)
+                .add("sex", mSex)
                 .build();
         Request request = new Request.Builder()
-                .url("http://210.192.48.244"+"/login/signup")
+                .url(getString(R.string.endpoint)+"/login/signup")
                 .post(formbody)
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Log.e(TAG, "onFailure: ", e);
                 call.cancel();
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if(response.isSuccessful()){
-                    Intent intent = new Intent(getApplication(),BaseActivity.class);
+                if (response.isSuccessful()) {
+                    Intent intent = new Intent(getApplication(), BaseActivity.class);
                     startActivity(intent);
-                    finish();
+//                    finish();
                     showToast("SignUp 成功");
-                }else{
+                } else {
                     showToast("SignUp 失敗");
                 }
                 response.close();
@@ -130,13 +131,13 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
         });
     }
 
-    private void showToast(final String message){
+    private void showToast(final String message) {
         runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                }
-            }
+                          @Override
+                          public void run() {
+                              Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                          }
+                      }
         );
-    };
+    }
 }

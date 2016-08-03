@@ -169,7 +169,8 @@
                 android:layout_below="@+id/comment_box"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/listView"
-                android:background="#ffffff" />
+                android:background="#ffffff"
+                android:layout_marginBottom="8dp" />
 
         </RelativeLayout>
     </ScrollView>

@@ -2,6 +2,7 @@ package com.developers.hack.cs.kagerou.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.developers.hack.cs.kagerou.R;
+import com.developers.hack.cs.kagerou.activity.BaseActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
@@ -35,11 +37,18 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
@@ -205,6 +214,33 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         circle.setClickable(true);
     }
 
+    void sendRequest(Location location){
+        OkHttpClient client = new OkHttpClient();
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        Request request = new Request.Builder()
+                .url(getString(R.string.endpoint)+"/maps/get_near/"+latitude+"/"+longitude)
+                .get()
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response respxonse) throws IOException {
+                if (respxonse.isSuccessful()) {
+                    Log.d(TAG, "成功");
+                } else {
+                    Log.d(TAG, "失敗");
+                }
+                respxonse.close();
+
+            }
+        });
+    }
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -232,6 +268,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             textLog += "Speed=" + String.valueOf(location.getSpeed()) + "\n";
             textLog += "Bearing=" + String.valueOf(location.getBearing()) + "\n";
             mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("Now"));
+
+            sendRequest(location);
 
             Log.d(TAG, textLog);
         } else {

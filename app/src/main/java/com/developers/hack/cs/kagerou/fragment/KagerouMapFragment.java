@@ -230,7 +230,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         Request request = new Request.Builder()
-                .url(getString(R.string.endpoint)+"/maps/get_near/"+latitude+"/"+longitude)
+                .url(getString(R.string.endpoint)+"/maps/get_near/"+longitude+"/"+latitude)
                 .get()
                 .build();
         client.newCall(request).enqueue(new Callback() {

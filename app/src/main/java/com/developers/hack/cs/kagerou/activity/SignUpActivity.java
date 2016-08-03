@@ -1,6 +1,8 @@
 package com.developers.hack.cs.kagerou.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,6 +36,9 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
     private EditText age_editText;
     private RadioGroup radioGroup;
 
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +50,9 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
         age_editText = (EditText) findViewById(R.id.age_editText);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener(this);
+
+        pref = getSharedPreferences("kagerou", Context.MODE_PRIVATE);
+        editor = pref.edit();
 
         signUp_button = (Button) findViewById(R.id.signUp_button);
         signUp_button.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +127,10 @@ public class SignUpActivity extends AppCompatActivity implements RadioGroup.OnCh
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
+                    editor.putInt(getString(R.string.login_judge),1);
+                    editor.putString(getString(R.string.login_user_name),userName);
+                    editor.putString(getString(R.string.login_user_pass),password);
+                    editor.commit();
                     Intent intent = new Intent(getApplication(), BaseActivity.class);
                     startActivity(intent);
 //                    finish();

@@ -1,6 +1,8 @@
 package com.developers.hack.cs.kagerou.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,6 +37,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText nameEditText;
     private EditText passwordEditText;
 
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+
     public void login() {
         Log.d(TAG, "login");
         Intent intent = new Intent(getApplication(), BaseActivity.class);
@@ -51,6 +56,9 @@ public class LoginActivity extends AppCompatActivity {
         signupButton = (Button) findViewById(R.id.signUp_button);
         nameEditText = (EditText) findViewById(R.id.user_name_edit_text);
         passwordEditText = (EditText) findViewById(R.id.password_edit_text);
+
+        pref = getSharedPreferences("kagerou", Context.MODE_PRIVATE);
+        editor = pref.edit();
 
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,11 +117,17 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
+                    Log.d(TAG,"Login 成功");
+                    editor.putInt(getString(R.string.login_judge),1);
+                    editor.putString(getString(R.string.login_user_name),userName);
+                    editor.putString(getString(R.string.login_user_pass),password);
+                    editor.commit();
                     Intent intent = new Intent(getApplication(), BaseActivity.class);
                     startActivity(intent);
                     finish();
                     showToast("Login 成功");
                 } else {
+                    Log.d(TAG,"Login 失敗");
                     showToast("Login 失敗");
                 }
                 response.close();

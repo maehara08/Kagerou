@@ -107,7 +107,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                 Log.d(TAG, "click fab");
                 mFragmentManager = getFragmentManager();
                 mTransaction = mFragmentManager.beginTransaction();
-                mTransaction.add(R.id.container, new PostFragment());
+                mTransaction.replace(R.id.frame_container, new PostFragment());
                 mTransaction.addToBackStack(null);
                 mTransaction.commit();
             }

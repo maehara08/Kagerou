@@ -19,14 +19,7 @@ public class MyDao {
     private static final String COLUMN_R = "radius";
     private static final String COLUMN_INSIDE_COLOR = "iColor";
     private static final String COLUMN_OUTSIDE_COLOR = "oColor";
-    private static final String[] COLUMNS = {
-            COLUMN_ID,
-            COLUMN_LAT,
-            COLUMN_LNG,
-            COLUMN_R,
-            COLUMN_INSIDE_COLOR,
-            COLUMN_OUTSIDE_COLOR
-    };
+    private static final String[] COLUMNS = {COLUMN_ID, COLUMN_LAT, COLUMN_LNG, COLUMN_R, COLUMN_INSIDE_COLOR, COLUMN_OUTSIDE_COLOR};
     // SQLiteDatabase
     private SQLiteDatabase db;
 
@@ -57,8 +50,8 @@ public class MyDao {
             entity.setLatValue(cursor.getDouble(1));
             entity.setLngValue(cursor.getDouble(2));
             entity.setRadiusValue(cursor.getInt(3));
-            entity.setIColorValue(cursor.getInt(4));
-            entity.setOColorValue(cursor.getInt(5));
+            entity.setIColorValue(cursor.getString(4));
+            entity.setOColorValue(cursor.getString(5));
             entityList.add(entity);
         }
 
@@ -67,7 +60,7 @@ public class MyDao {
     /**
      * データの登録   ----------------③
      */
-    public long insert(double lat,double lng,int r,int iColor,int oColor) {
+    public long insert(double lat,double lng,int r,String iColor,String oColor) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_LAT, lat);
         values.put(COLUMN_LNG, lng);

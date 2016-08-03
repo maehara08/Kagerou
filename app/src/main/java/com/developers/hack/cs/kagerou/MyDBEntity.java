@@ -9,8 +9,8 @@ public class MyDBEntity {
     private double latValue;
     private double lngValue;
     private int radiusValue;
-    private int iColorValue;
-    private int oColorValue;
+    private String iColorValue;
+    private String oColorValue;
 
     public void setRowId(int rowId) {
         this.rowId = rowId;
@@ -41,18 +41,18 @@ public class MyDBEntity {
     public int getRadiusValue() {
         return radiusValue;
     }
-    public void setIColorValue(int value) {
+    public void setIColorValue(String value) {
         this.iColorValue = value;
     }
 
-    public int getIColorValue() {
+    public String getIColorValue() {
         return iColorValue;
     }
-    public void setOColorValue(int value) {
+    public void setOColorValue(String value) {
         this.oColorValue = value;
     }
 
-    public int getOColorValue() {
+    public String getOColorValue() {
         return oColorValue;
     }
 }

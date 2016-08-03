@@ -8,11 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by Wataru on 16/08/02.
  */
 public class MyDBHelper extends SQLiteOpenHelper {
-    private static final String DB_NAME = "memodb";
+    private static final String DB_NAME = "circle";
 
     /** 「dbtest」テーブルの作成用SQL */
     private static final String CREATE_TABLE_SQL = "" +
-            "create table memo (" +
+            "create table circle (" +
             "rowid integer primary key autoincrement, " +
             "data text not null " +
             ")";

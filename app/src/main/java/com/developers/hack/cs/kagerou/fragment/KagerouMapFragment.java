@@ -90,11 +90,11 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         SQLiteDatabase db = helper.getReadableDatabase();
         dao = new MyDao(db);
         if(firstTime==0){
-            dao.insert(35.681298,139.76624689999994,800,0xaaa8ab39,0xe1a8ab39);
-            dao.insert(35.6581003,139.70174169999996,700,0xaa359f79,0xe1359f79);
-            dao.insert(35.633998,139.715828,950,0xaa832f8d,0xe1832f8d);
-            dao.insert(35.6284713,139.73875969999995,1000,0xaa892e2f,0xe1892e2f);
-            dao.insert(35.6953874,139.7000494,1300,0xaa3551a0,0xe13551a0);
+            dao.insert(35.681298,139.76624689999994,800,"0xaaa8ab39","0xe1a8ab39");
+            dao.insert(35.6581003,139.70174169999996,700,"0xaa359f79","0xe1359f79");
+            dao.insert(35.633998,139.715828,950,"0xaa832f8d","0xe1832f8d");
+            dao.insert(35.6284713,139.73875969999995,1000,"0xaa892e2f","0xe1892e2f");
+            dao.insert(35.6953874,139.7000494,1300,"xaa3551a0","0xe13551a0");
             firstTime=1;
         }
         mContext = getActivity();
@@ -214,8 +214,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                     .center(new LatLng(entity.getLatValue(), entity.getLngValue()))
                     .radius(entity.getRadiusValue())
                     .strokeWidth(5)
-                    .strokeColor(entity.getOColorValue())
-                    .fillColor(entity.getIColorValue());
+                    .strokeColor(Integer.valueOf(entity.getOColorValue()))
+                    .fillColor(Integer.valueOf(entity.getIColorValue()));
             circle = mMap.addCircle(circleOptions);
             circle.setClickable(true);
         }

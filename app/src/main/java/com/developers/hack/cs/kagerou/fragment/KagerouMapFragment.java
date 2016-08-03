@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.developers.hack.cs.kagerou.R;
@@ -57,6 +58,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     private LatLng mNowLatLng;
     private Activity mContext;
 
+
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
 
@@ -71,6 +73,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public static KagerouMapFragment getInstance() {
         KagerouMapFragment kagerouMapFragment = new KagerouMapFragment();
         return kagerouMapFragment;
+
     }
 
     @Override
@@ -99,17 +102,25 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_maps, null);
+        final View view = inflater.inflate(R.layout.fragment_maps, null);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "click fab");
-                mFragmentManager = getFragmentManager();
-                mTransaction = mFragmentManager.beginTransaction();
-                mTransaction.replace(R.id.frame_container, new PostFragment());
-                mTransaction.addToBackStack(null);
-                mTransaction.commit();
+                Bundle bundle = new Bundle();
+                bundle.putString(getString(R.string.flagment_key_lat),String.valueOf(lat));
+                bundle.putString(getString(R.string.flagment_key_lng),String.valueOf(lng));
+                PostFragment postFragment = new PostFragment();
+                postFragment.setArguments(bundle);
+                getFragmentManager().beginTransaction()
+                        .add(R.id.container, postFragment)
+                        .commit();
+//                mFragmentManager = getFragmentManager();
+//                mTransaction = mFragmentManager.beginTransaction();
+//                mTransaction.add(R.id.frame_container, new PostFragment());
+//                mTransaction.addToBackStack(null);
+//                mTransaction.commit();
             }
         });
         return view;

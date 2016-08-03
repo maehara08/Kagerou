@@ -8,13 +8,13 @@
     android:paddingRight="6dp"
     android:paddingTop="6dp"
     tools:context=".activity.SplashActivity"
-    android:background="#0071a9">
+    android:background="#00a8b2">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#0071a9">
+        android:background="#00a8b2">
 
         <FrameLayout
             android:layout_width="match_parent"

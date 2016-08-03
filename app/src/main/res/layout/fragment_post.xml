@@ -40,7 +40,7 @@
         android:text="投稿"
         android:id="@+id/post"
         android:layout_gravity="center_vertical|bottom|right"
-        android:backgroundTint="#0086C9"
+        android:backgroundTint="#00a8b2"
         android:textColor="#ffffff"
         android:textSize="16dp"
         android:layout_alignParentBottom="true"

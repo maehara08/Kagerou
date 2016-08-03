@@ -1,0 +1,100 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.developers.hack.cs.kagerou.fragment.MyDetailFragment"
+    android:background="#00a8b2">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="タイトル"
+        android:id="@+id/title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:textSize="20dp"
+        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        android:background="#cacaca"
+        android:gravity="left|top" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:text="投稿日時"
+        android:id="@+id/date"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="2dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="2dp"
+        android:textSize="15dp"
+        android:gravity="left"
+        android:background="#e8e8e8" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/date"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="悩み"
+                android:id="@+id/main_text"
+                android:padding="8dp"
+                android:textSize="15dp"
+                android:gravity="left|top"
+                android:background="#ffffff" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/main_text"
+                android:layout_centerHorizontal="true"
+                android:text="悩み解消"
+                android:id="@+id/resolution_button"
+                android:background="#ef5e25"
+                android:layout_margin="8dp"
+                android:textColor="#ffffff"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/resolution_button"
+                android:layout_centerHorizontal="true"
+                android:text="コメント"
+                android:id="@+id/comments"
+                android:padding="8dp"
+                android:textSize="20dp"
+                android:background="#e8e8e8" />
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/comments"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/listView"
+                android:background="#ffffff"
+                android:layout_marginBottom="8dp" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

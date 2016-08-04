@@ -105,6 +105,54 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
+    public void resetCommentDB(SQLiteDatabase commentDB){
+        Log.d(TAG, "resetCommentDB");
+        String deleteQuery = "DROP TABLE IF EXISTS comments";
+        String resetQuery = "create table comments" + "(" +
+                "name text," +
+                "circle_id int," +
+                "comment_id int," +
+                "content text," +
+                "created_at text" +
+                ");";
+
+        commentDB.execSQL(deleteQuery);
+        commentDB.execSQL(resetQuery);
+    }
+
+    public void loadCommentDB(SQLiteDatabase commentDB){
+        Cursor cursor = commentDB.query(
+                "comments", new String[]{"name", "circle_id"}, null, null, null, null, "name");
+        // 参照先を一番始めに
+        boolean isEof = cursor.moveToFirst();
+        // データを取得していく
+        while (isEof) {
+            Log.d(TAG, "loadCommentDB + " + cursor.getString(cursor.getColumnIndex("name")));
+            isEof = cursor.moveToNext();
+        }
+        // 忘れずに閉じる
+        cursor.close();
+    }
+    public void insertCommentDB(String jsondata, SQLiteDatabase commentDB) throws JSONException {
+        JSONArray jsonArray = new JSONArray(jsondata);
+        
+        for(int i = 0; i < jsonArray.length(); i++){
+            Log.d(TAG, "insertCommentDB");
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String name = '"' + jsonObject.getString("name")+'"';
+            int circle_id = jsonObject.getInt("circle_id");
+            int comment_id = jsonObject.getInt("comment_id");
+            String content = '"' + jsonObject.getString("content") + '"';
+            String created_at = '"' + jsonObject.getString("created_at") + '"';
+
+            String query = String.format("insert into comments (name, circle_id, comment_id, content, created_at)" +
+                    "values(%s, %s, %s, %s, %s);",
+                    name, circle_id, comment_id, content, created_at);
+            Log.d(TAG,"insertCommentDB + " + name);
+            commentDB.execSQL(query);
+        }
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }

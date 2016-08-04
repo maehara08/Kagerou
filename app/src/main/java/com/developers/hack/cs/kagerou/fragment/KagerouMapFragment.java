@@ -177,8 +177,12 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public void onStop() {
         super.onStop();
         stopFusedLocation();
-        mySQLiteOpenHelper.close();
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mySQLiteOpenHelper.close();
     }
 
     private void startFusedLocation() {
@@ -291,6 +295,14 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             public void onResponse(Call call, Response respxonse) throws IOException {
                 if (respxonse.isSuccessful()) {
                     Log.d(TAG, "getComments 成功");
+                    String jsondata = respxonse.body().string();
+                    mySQLiteOpenHelper.resetCommentDB(mKagerouDB);
+                    try {
+                        mySQLiteOpenHelper.insertCommentDB(jsondata,mKagerouDB);
+                        mySQLiteOpenHelper.loadCommentDB(mKagerouDB);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Log.d(TAG, "getComments 失敗");
                 }

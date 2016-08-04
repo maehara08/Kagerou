@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -311,8 +312,20 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             textLog += "Bearing=" + String.valueOf(location.getBearing()) + "\n";
             mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("Now"));
 
-            sendRequest(location);
-            getComments();
+            new AsyncTask<Void, Void, String>() {
+
+                @Override
+                protected String doInBackground(Void... params) {
+                    sendRequest(location);
+                    getComments();
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(String s) {
+                    Log.d(TAG, "onPostExecute");
+                }
+            }.execute();
 
             Log.d(TAG, textLog);
         } else {

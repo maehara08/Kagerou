@@ -23,6 +23,11 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = MySQLiteOpenHelper.class.getSimpleName();
     private String mDBName;
     private OnLoadFinishListener mListener;
+    ArrayList<KagerouCircle> mCircleList;
+    SQLiteDatabase mKagerouDB;
+    private final String DB_NAME = "kagerou.db";
+
+
 
     public MySQLiteOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -140,7 +145,6 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
             Log.d(TAG, "loadCircleDB radius: " + cursor.getString(cursor.getColumnIndex("radius")));
 //            Log.d(TAG, "loadCircleDB lat: " + cursor.getString(cursor.getColumnIndex("lat")));
-//            Log.d(TAG, "loadCircleDB move_to_y: " + cursor.getString(cursor.getColumnIndex("move_to_y")));
             isEof = cursor.moveToNext();
         }
         // 忘れずに閉じる
@@ -155,8 +159,38 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         String updateQuery = "update circles set lat = lat + move_to_y," +
                 "lng = lng + move_to_x, radius = radius + 1;";
         circleDB.execSQL(updateQuery);
+        hitCircle(circleDB);
         Log.d(TAG, "updateCircleDB: END");
 //        loadCircleDB(circleDB);
+    }
+
+    public void hitCircle(SQLiteDatabase circleDB){
+        Log.d(TAG, "hitCircle: ");
+        ArrayList<KagerouCircle> mCircleList = loadCircleDB(circleDB);
+
+        if(mCircleList != null){
+            for(int i = 0; i < mCircleList.size(); i++){
+                for (int k = 0; k < mCircleList.size(); k++){
+                    if(i != k){
+                        if(mCircleList.get(i).getRadius() >= mCircleList.get(k).getRadius()){
+                            if(mCircleList.get(i).getLat()-(mCircleList.get(i).getRadius()*20) <=
+                                    mCircleList.get(k).getLat()
+                                    && mCircleList.get(i).getLat() + (mCircleList.get(i).getRadius()*20) >=
+                                    mCircleList.get(k).getLat()
+                                    && mCircleList.get(i).getLng() - (mCircleList.get(i).getRadius()*20) <=
+                                    mCircleList.get(k).getLng()
+                                    && mCircleList.get(i).getLng() + (mCircleList.get(i).getRadius()*20) >=
+                                    mCircleList.get(k).getLng()){
+                                String deleteQuery = "delete from circles where circle_id = " + mCircleList.get(k).getCircle_id() + ";";
+                                circleDB.execSQL(deleteQuery);
+                                Log.d(TAG, "hitCircle: if");
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void helpButtonPush(SQLiteDatabase circleDB, String circle_id){

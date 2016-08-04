@@ -157,6 +157,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                         .replace(R.id.frame_container, postFragment)
                         .addToBackStack(null)
                         .commit();
+                mySQLiteOpenHelper.updateCircleDB(mKagerouDB);
 //                Log.d(TAG,"updateCircleDB: start");
 //                mySQLiteOpenHelper.updateCircleDB(mKagerouDB);
 //                mFragmentManager = getFragmentManager();

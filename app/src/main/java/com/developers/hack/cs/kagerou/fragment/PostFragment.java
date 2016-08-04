@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,6 +44,8 @@ import okhttp3.Response;
 public class PostFragment extends Fragment {
 
     private static final String TAG = PostFragment.class.getSimpleName();
+
+    SharedPreferences pref;
 
     Button post;
 
@@ -91,6 +94,7 @@ public class PostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pref = this.getActivity().getSharedPreferences("kagerou", Context.MODE_PRIVATE);
         if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
@@ -136,7 +140,7 @@ public class PostFragment extends Fragment {
     private void postCircle() {
 
         OkHttpClient client = new OkHttpClient();
-        final String userName = "TODO"; // TODO
+        final String userName = pref.getString(getString(R.string.login_user_name),"NONE"); // TODO
         final String title = titleEditText.getText().toString();
         final String content = contentEditText.getText().toString();
 //        final double longitude = bundle.getDouble("longitude"); // 緯度 TODO

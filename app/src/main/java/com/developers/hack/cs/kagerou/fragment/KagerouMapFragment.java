@@ -258,6 +258,31 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         });
     }
 
+    void getComments(){
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getString(R.string.endpoint)+"/maps/get_comments/")
+                .get()
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response respxonse) throws IOException {
+                if (respxonse.isSuccessful()) {
+                    Log.d(TAG, "getComments 成功");
+                } else {
+                    Log.d(TAG, "getComments 失敗");
+                }
+                respxonse.close();
+
+            }
+        });
+    }
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -287,6 +312,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("Now"));
 
             sendRequest(location);
+            getComments();
 
             Log.d(TAG, textLog);
         } else {

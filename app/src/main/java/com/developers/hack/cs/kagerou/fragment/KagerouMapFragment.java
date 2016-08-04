@@ -496,12 +496,14 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                         String date = mCircleList.get(zIndex).getCreated_at();
                         String name = mCircleList.get(zIndex).getName();
                         String content = mCircleList.get(zIndex).getContent();
+                        String circle_id = String.valueOf(mCircleList.get(zIndex).getCircle_id());
 
                         Bundle bundle = new Bundle();
                         bundle.putString(getString(R.string.post_title), title);
                         bundle.putString(getString(R.string.post_date), date);
                         bundle.putString(getString(R.string.post_name), name);
                         bundle.putString(getString(R.string.post_content), content);
+                        bundle.putString(getString(R.string.post_circle_id), circle_id);
                         DetailFragment detailFragment = new DetailFragment();
                         detailFragment.setArguments(bundle);
                         getFragmentManager().beginTransaction()

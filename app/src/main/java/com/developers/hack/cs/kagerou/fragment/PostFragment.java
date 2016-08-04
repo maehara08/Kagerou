@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import com.developers.hack.cs.kagerou.activity.MainActivity;
 import com.developers.hack.cs.kagerou.activity.SignUpActivity;
 
 import java.io.IOException;
+import java.sql.SQLData;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -51,6 +54,8 @@ public class PostFragment extends Fragment {
     private EditText titleEditText;
     private EditText contentEditText;
     Bundle bundle = getArguments();
+    private SQLiteDatabase circleDB;
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -139,8 +144,8 @@ public class PostFragment extends Fragment {
         final String userName = "TODO"; // TODO
         final String title = titleEditText.getText().toString();
         final String content = contentEditText.getText().toString();
-//        final double longitude = bundle.getDouble("longitude"); // 緯度 TODO
-//        final double latitude = bundle.getDouble("latitude");// 経度 TODO
+//        final double longitude = bundle.getDouble("longitude");
+//        final double latitude = bundle.getDouble("latitude");
 
         if (title == null || content == null) {
             return;
@@ -170,6 +175,7 @@ public class PostFragment extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     removeThis();
+                    Log.d(TAG, lat + " " +lng);
                     showToast("投稿 成功");
                 } else {
                     showToast("投稿 失敗");

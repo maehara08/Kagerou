@@ -488,60 +488,31 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                 circles[i] = circleTemp;
             }
             mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
-                @Override
-                public void onCircleClick(Circle circle) {
-                    Log.d(TAG, "onClickCircle");
-                    int zIndex = (int) circle.getZIndex();
-                    String title = mCircleList.get(zIndex).getTitle();
-                    String date = mCircleList.get(zIndex).getCreated_at();
-                    String name = mCircleList.get(zIndex).getName();
-                    String content = mCircleList.get(zIndex).getContent();
+                    @Override
+                    public void onCircleClick(Circle circle) {
+                        Log.d(TAG, "onClickCircle");
+                        int zIndex = (int)circle.getZIndex();
+                        String title = mCircleList.get(zIndex).getTitle();
+                        String date = mCircleList.get(zIndex).getCreated_at();
+                        String name = mCircleList.get(zIndex).getName();
+                        String content = mCircleList.get(zIndex).getContent();
+                        String circle_id = String.valueOf(mCircleList.get(zIndex).getCircle_id());
 
-                    Bundle bundle = new Bundle();
-                    bundle.putString(getString(R.string.post_title), title);
-                    bundle.putString(getString(R.string.post_date), date);
-                    bundle.putString(getString(R.string.post_name), name);
-                    bundle.putString(getString(R.string.post_content), content);
-                    DetailFragment detailFragment = new DetailFragment();
-                    detailFragment.setArguments(bundle);
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.frame_container, detailFragment)
-                            .addToBackStack(null)
-                            .commit();
-
-//                        mFragmentManager = getFragmentManager();
-//                        mTransaction = mFragmentManager.beginTransaction();
-//                        mTransaction.add(R.id.frame_container, new DetailFragment());
-//                        mTransaction.addToBackStack(null);
-//                        mTransaction.commit();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(getString(R.string.post_title), title);
+                        bundle.putString(getString(R.string.post_date), date);
+                        bundle.putString(getString(R.string.post_name), name);
+                        bundle.putString(getString(R.string.post_content), content);
+                        bundle.putString(getString(R.string.post_circle_id), circle_id);
+                        DetailFragment detailFragment = new DetailFragment();
+                        detailFragment.setArguments(bundle);
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.frame_container, detailFragment)
+                                .addToBackStack(null)
+                                .commit();
                     Log.d(TAG, "End of onClickCircle");
                 }
             });
-//            for (int i = 0; i < 19; i++) {
-//                final CircleOptions circleOptions = new CircleOptions()
-//                        .center(new LatLng(lat, lng))
-//                        .radius(100)
-//                        .strokeWidth(5)
-//                        .strokeColor(0xe1285577)
-//                        .fillColor(0xaa2f7b8e);
-//                mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
-//                    @Override
-//                    public void onCircleClick(Circle circle) {
-//                        Log.d(TAG, "onClickCircle");
-//                        mFragmentManager = getFragmentManager();
-//                        mTransaction = mFragmentManager.beginTransaction();
-//                        mTransaction.add(R.id.frame_container, new DetailFragment());
-//                        mTransaction.addToBackStack(null);
-//                        mTransaction.commit();
-//                        Log.d(TAG, "End of onClickCircle");
-//                    }
-//                });
-//                circle = mMap.addCircle(circleOptions);
-//                circle.setClickable(true);
-//            }
-//        } else {
-//            Log.d(TAG, "createCircle: isNull");
-//        }
         }
     }
 

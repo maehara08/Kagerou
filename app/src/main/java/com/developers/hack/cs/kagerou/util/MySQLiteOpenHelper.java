@@ -98,10 +98,10 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         boolean isEof = cursor.moveToFirst();
         // データを取得していく
         while (isEof) {
-            Log.d(TAG, "loadCircleDB lng: " + cursor.getString(cursor.getColumnIndex("lng")));
-            Log.d(TAG, "loadCircleDB move_to_x: " + cursor.getString(cursor.getColumnIndex("move_to_x")));
-            Log.d(TAG, "loadCircleDB lat: " + cursor.getString(cursor.getColumnIndex("lat")));
-            Log.d(TAG, "loadCircleDB move_to_y: " + cursor.getString(cursor.getColumnIndex("move_to_y")));
+//            Log.d(TAG, "loadCircleDB lng: " + cursor.getString(cursor.getColumnIndex("lng")));
+//            Log.d(TAG, "loadCircleDB move_to_x: " + cursor.getString(cursor.getColumnIndex("move_to_x")));
+//            Log.d(TAG, "loadCircleDB lat: " + cursor.getString(cursor.getColumnIndex("lat")));
+//            Log.d(TAG, "loadCircleDB move_to_y: " + cursor.getString(cursor.getColumnIndex("move_to_y")));
             isEof = cursor.moveToNext();
         }
         // 忘れずに閉じる

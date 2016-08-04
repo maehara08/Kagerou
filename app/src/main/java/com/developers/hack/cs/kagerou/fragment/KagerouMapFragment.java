@@ -2,11 +2,10 @@ package com.developers.hack.cs.kagerou.fragment;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -20,11 +19,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.developers.hack.cs.kagerou.R;
-import com.developers.hack.cs.kagerou.activity.BaseActivity;
 import com.developers.hack.cs.kagerou.util.MySQLiteOpenHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -41,9 +38,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Random;
@@ -73,8 +68,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     private long lastLocationTime;
     private LatLng mNowLatLng;
     private Activity mContext;
-    private String mDBname = "circle.db";
-    SQLiteDatabase mCircleDB;
+    private final String DB_NAME = "kagerou.db";
+    SQLiteDatabase mKagerouDB;
     MySQLiteOpenHelper mySQLiteOpenHelper;
 
 
@@ -116,8 +111,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         mLocationRequest.setFastestInterval(16);
 
         fusedLocationProviderApi = LocationServices.FusedLocationApi;
-        mySQLiteOpenHelper= new MySQLiteOpenHelper(getContext(),mDBname,null,1);
-        mCircleDB = mySQLiteOpenHelper.getWritableDatabase();
+        mySQLiteOpenHelper = new MySQLiteOpenHelper(getContext(), DB_NAME, null, 1);
+        mKagerouDB = mySQLiteOpenHelper.getWritableDatabase();
     }
 
     @Nullable
@@ -130,8 +125,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             public void onClick(View v) {
                 Log.d(TAG, "click fab");
                 Bundle bundle = new Bundle();
-                bundle.putString(getString(R.string.flagment_key_lat),String.valueOf(location.getLatitude()));
-                bundle.putString(getString(R.string.flagment_key_lng),String.valueOf(location.getLongitude()));
+                bundle.putString(getString(R.string.flagment_key_lat), String.valueOf(location.getLatitude()));
+                bundle.putString(getString(R.string.flagment_key_lng), String.valueOf(location.getLongitude()));
                 PostFragment postFragment = new PostFragment();
                 postFragment.setArguments(bundle);
                 getFragmentManager().beginTransaction()
@@ -182,6 +177,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public void onStop() {
         super.onStop();
         stopFusedLocation();
+        mySQLiteOpenHelper.close();
+
     }
 
     private void startFusedLocation() {
@@ -231,18 +228,24 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             @Override
             public void onCircleClick(Circle circle) {
                 Log.d(TAG, "onClickCircle");
+                mFragmentManager = getFragmentManager();
+                mTransaction = mFragmentManager.beginTransaction();
+                mTransaction.add(R.id.frame_container, new DetailFragment());
+                mTransaction.addToBackStack(null);
+                mTransaction.commit();
+                Log.d(TAG, "End of onClickCircle");
             }
         });
         circle = mMap.addCircle(circleOptions);
         circle.setClickable(true);
     }
 
-    void sendRequest(Location location){
+    void sendRequest(Location location) {
         OkHttpClient client = new OkHttpClient();
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         Request request = new Request.Builder()
-                .url(getString(R.string.endpoint)+"/maps/get_near/"+latitude+"/"+longitude)
+                .url(getString(R.string.endpoint) + "/maps/get_near/" + longitude + "/" + latitude)
                 .get()
                 .build();
         client.newCall(request).enqueue(new Callback() {
@@ -255,16 +258,41 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             public void onResponse(Call call, Response respxonse) throws IOException {
                 if (respxonse.isSuccessful()) {
                     Log.d(TAG, "成功");
-                    String jsonData=respxonse.body().string();
-                    mySQLiteOpenHelper.resetCircleTable(mCircleDB);
+                    String jsonData = respxonse.body().string();
+                    mySQLiteOpenHelper.resetCircleTable(mKagerouDB);
                     try {
-                        mySQLiteOpenHelper.insertCircleDB(jsonData,mCircleDB);
-                        mySQLiteOpenHelper.loadCircleDB(mCircleDB);
+                        mySQLiteOpenHelper.insertCircleDB(jsonData, mKagerouDB);
+                        mySQLiteOpenHelper.loadCircleDB(mKagerouDB);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 } else {
                     Log.d(TAG, "失敗");
+                }
+                respxonse.close();
+
+            }
+        });
+    }
+
+    void getComments() {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getString(R.string.endpoint) + "/maps/get_comments/")
+                .get()
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response respxonse) throws IOException {
+                if (respxonse.isSuccessful()) {
+                    Log.d(TAG, "getComments 成功");
+                } else {
+                    Log.d(TAG, "getComments 失敗");
                 }
                 respxonse.close();
 
@@ -299,7 +327,20 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             textLog += "Bearing=" + String.valueOf(location.getBearing()) + "\n";
             mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("Now"));
 
-            sendRequest(location);
+            new AsyncTask<Void, Void, String>() {
+
+                @Override
+                protected String doInBackground(Void... params) {
+                    sendRequest(location);
+                    getComments();
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(String s) {
+                    Log.d(TAG, "onPostExecute");
+                }
+            }.execute();
 
             Log.d(TAG, textLog);
         } else {
@@ -364,44 +405,6 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
 
         } else {
             mResolvingError = true;
-        }
-    }
-
-    public void insertCircleDB(String jsondata, SQLiteDatabase circleDB) throws JSONException {
-        Log.d(TAG,"insertCircleDB");
-        JSONArray jsonArray = new JSONArray(jsondata);
-        int i = 0;
-
-        while(true){
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-            if(jsonObject != null) {
-                String name = jsonObject.getString("name");
-                int user_id = jsonObject.getInt("use_id");
-                int circle_id = jsonObject.getInt("circle_id");
-                String title = jsonObject.getString("title");
-                String content = jsonObject.getString("content");
-                int radius = jsonObject.getInt("radius");
-                double move_to_x = jsonObject.getDouble("move_to_x");
-                double move_to_y = jsonObject.getDouble("move_to_y");
-                int help_count = jsonObject.getInt("help_count");
-                int view_count = jsonObject.getInt("view_count");
-                int from_merge = jsonObject.getInt("from_merge");
-                int draw = jsonObject.getInt("draw");
-                String create_at = jsonObject.getString("create_at");
-                double lng = jsonObject.getDouble("lng");
-                double lat = jsonObject.getDouble("lat");
-                double distance = jsonObject.getDouble("distance");
-
-                String query = String.format("INSERT INTO circle (name, user_id, circle_id, title, content, radius, move_to_x, move_to_y," +
-                                "help_count, view_count, from_merge, draw, create_at, lng, lat, distance) " +
-                                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                        name, user_id, circle_id, title, content, radius, move_to_x, move_to_y, help_count,
-                        view_count, from_merge, draw, create_at, lng, lat, distance);
-                circleDB.execSQL(query);
-                i += 1;
-            }else{
-                break;
-            }
         }
     }
 }

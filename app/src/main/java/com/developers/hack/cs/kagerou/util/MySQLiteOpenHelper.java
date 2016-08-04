@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.developers.hack.cs.kagerou.fragment.KagerouMapFragment;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,30 +26,6 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d(TAG, "onCreate");
-        String queryTableCircle1 = "DROP TABLE IF EXISTS circles";
-        String queryTableCircle2 = "CREATE TABLE circles" + "(" +
-                "name text," +
-                "user_id int," +
-                "circle_id int primary key," +
-                "title text not null," +
-                "content text not null," +
-                "radius int not null," +
-                "move_to_x blog not null," +
-                "move_to_y blog not null," +
-                "help_count int default 0," +
-                "view_count int default 0," +
-                "from_merge int ," +
-                "draw int ," +
-                "created_at text," +
-                "lng blog not null," +
-                "lat blog not null," +
-                "distance blog not null" +
-                ");";
-        String queryTableCircle3 = " CREATE TABLE circles ( name text, user_id int, circle_id int primary key, title text not null, content text not null, radius int not null, move_to_x int not null, move_to_y int not null, help_count int default 0, view_count int default 0, from_merge int , draw int , created_at text, lng int not null, lat int not null, distance int not null);";
-
-        db.execSQL(queryTableCircle1);
-        db.execSQL(queryTableCircle3);
-
     }
 
     public void insertCircleDB(String jsondata, SQLiteDatabase circleDB) throws JSONException {
@@ -71,8 +45,10 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             int help_count = jsonObject.getInt("help_count");
             int view_count = jsonObject.getInt("view_count");
 //                int from_merge = jsonObject.getInt("from_merge");
+            //TODO
             int from_merge = 0;
 //                int draw = jsonObject.getInt("draw");
+            // TODO
             int draw = 0;
             String created_at = '"' + jsonObject.getString("created_at") + '"';
             double lng = jsonObject.getDouble("lng");
@@ -85,13 +61,12 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
                     name, user_id, circle_id, title, content, radius, move_to_x, move_to_y, help_count,
                     view_count, from_merge, draw, created_at, lng, lat, distance);
 
-            String testQuery = "select * from circles;";
-            Log.d(TAG,"insertCircleDB + " + name);
+            Log.d(TAG, "insertCircleDB + " + name);
             circleDB.execSQL(query);
         }
     }
 
-    public void resetCircleTable(SQLiteDatabase circleDB){
+    public void resetCircleTable(SQLiteDatabase circleDB) {
         String query = "DROP TABLE IF EXISTS circles";
         String resetQuery = "CREATE TABLE circles" + "(" +
                 "name text," +
@@ -116,17 +91,17 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         circleDB.execSQL(resetQuery);
     }
 
-    public void loadCircleDB(SQLiteDatabase circleDB){
+    public void loadCircleDB(SQLiteDatabase circleDB) {
         Cursor cursor = circleDB.query(
-                "circles", new String[] {"name", "user_id"}, null,null,null,null,"name");
-// 参照先を一番始めに
+                "circles", new String[]{"name", "user_id"}, null, null, null, null, "name");
+        // 参照先を一番始めに
         boolean isEof = cursor.moveToFirst();
-// データを取得していく
-        while(isEof) {
+        // データを取得していく
+        while (isEof) {
             Log.d(TAG, "loadCircleDB + " + cursor.getString(cursor.getColumnIndex("name")));
             isEof = cursor.moveToNext();
         }
-// 忘れずに閉じる
+        // 忘れずに閉じる
         cursor.close();
     }
 

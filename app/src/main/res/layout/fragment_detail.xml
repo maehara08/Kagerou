@@ -1,0 +1,195 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.developers.hack.cs.kagerou.fragment.DetailFragment"
+    android:background="#00a8b2">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="タイトル"
+        android:id="@+id/title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:textSize="20dp"
+        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        android:background="#cacaca"
+        android:gravity="left|top" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:text="投稿日時"
+        android:id="@+id/date"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="2dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="2dp"
+        android:textSize="15dp"
+        android:gravity="right"
+        android:background="#e8e8e8" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="#e8e8e8"
+        android:id="@+id/linearLayout3">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ユーザーネーム"
+                android:id="@+id/username"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:textSize="15dp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/username"
+                android:layout_centerHorizontal="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="年齢"
+                    android:id="@+id/age"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="2dp"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="性別"
+                    android:id="@+id/sex"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="2dp"
+                    android:textSize="15dp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="64dp"
+            android:layout_height="35dp"
+            android:text="HELP"
+            android:id="@+id/help_button"
+            android:layout_gravity="center"
+            android:layout_marginRight="8dp"
+            android:background="#e35c28"
+            android:textColor="#ffffff"
+            android:textSize="12dp" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/linearLayout3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="悩み"
+                android:id="@+id/main_text"
+                android:padding="8dp"
+                android:textSize="15dp"
+                android:gravity="left|top"
+                android:background="#ffffff" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/main_text"
+                android:layout_centerHorizontal="true"
+                android:text="コメント"
+                android:id="@+id/comments"
+                android:padding="8dp"
+                android:textSize="20dp"
+                android:background="#e8e8e8" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/comments"
+                android:layout_centerHorizontal="true"
+                android:background="#ffffff"
+                android:id="@+id/comment_box">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/comment"
+                    android:layout_weight="1"
+                    android:hint="コメントを入力"
+                    android:paddingLeft="8dp"
+                    android:gravity="left|top" />
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="64dp"
+                    android:layout_height="35dp"
+                    android:text="SEND"
+                    android:id="@+id/send_button"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_marginRight="8dp"
+                    android:background="#00a8b2"
+                    android:textColor="#ffffff"
+                    android:textSize="12dp"
+                    android:layout_marginBottom="2dp" />
+
+            </LinearLayout>
+
+            <com.developers.hack.cs.kagerou.activity.MesuredListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/comment_box"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/listView"
+                android:background="#ffffff"
+                android:layout_marginBottom="8dp" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

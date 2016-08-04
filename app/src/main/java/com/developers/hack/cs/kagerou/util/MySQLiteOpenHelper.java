@@ -93,16 +93,29 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
     public void loadCircleDB(SQLiteDatabase circleDB) {
         Cursor cursor = circleDB.query(
-                "circles", new String[]{"name", "user_id"}, null, null, null, null, "name");
+                "circles", new String[]{"name", "circle_id","lng","lat","move_to_x","move_to_y"}, null, null, null, null, "circle_id");
         // 参照先を一番始めに
         boolean isEof = cursor.moveToFirst();
         // データを取得していく
         while (isEof) {
-            Log.d(TAG, "loadCircleDB + " + cursor.getString(cursor.getColumnIndex("name")));
+            Log.d(TAG, "loadCircleDB lng: " + cursor.getString(cursor.getColumnIndex("lng")));
+            Log.d(TAG, "loadCircleDB move_to_x: " + cursor.getString(cursor.getColumnIndex("move_to_x")));
+            Log.d(TAG, "loadCircleDB lat: " + cursor.getString(cursor.getColumnIndex("lat")));
+            Log.d(TAG, "loadCircleDB move_to_y: " + cursor.getString(cursor.getColumnIndex("move_to_y")));
             isEof = cursor.moveToNext();
         }
         // 忘れずに閉じる
         cursor.close();
+    }
+
+    public void updateCircleDB(SQLiteDatabase circleDB){
+        Log.d(TAG, "updateCircleDB: in method");
+//        loadCircleDB(circleDB);
+        String updateQuery = "update circles set lat = lat + move_to_y," +
+                "lng = lng + move_to_x;";
+//        circleDB.execSQL(updateQuery);
+        Log.d(TAG,"updateCircleDB: END");
+        loadCircleDB(circleDB);
     }
 
     public void resetCommentDB(SQLiteDatabase commentDB){

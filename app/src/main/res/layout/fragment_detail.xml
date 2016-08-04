@@ -180,7 +180,7 @@
 
             </LinearLayout>
 
-            <ListView
+            <com.developers.hack.cs.kagerou.activity.MesuredListView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/comment_box"

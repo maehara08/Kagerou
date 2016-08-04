@@ -221,9 +221,10 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                 Log.d(TAG, "onClickCircle");
                 mFragmentManager = getFragmentManager();
                 mTransaction = mFragmentManager.beginTransaction();
-                mTransaction.replace(R.id.frame_container, new DetailFragment());
+                mTransaction.add(R.id.frame_container, new DetailFragment());
                 mTransaction.addToBackStack(null);
                 mTransaction.commit();
+                Log.d(TAG,"End of onClickCircle");
             }
         });
         circle = mMap.addCircle(circleOptions);

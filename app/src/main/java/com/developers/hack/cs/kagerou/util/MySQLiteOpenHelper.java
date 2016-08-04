@@ -113,9 +113,9 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 //        loadCircleDB(circleDB);
         String updateQuery = "update circles set lat = lat + move_to_y," +
                 "lng = lng + move_to_x;";
-//        circleDB.execSQL(updateQuery);
+        circleDB.execSQL(updateQuery);
         Log.d(TAG,"updateCircleDB: END");
-        loadCircleDB(circleDB);
+//        loadCircleDB(circleDB);
     }
 
     public void resetCommentDB(SQLiteDatabase commentDB){

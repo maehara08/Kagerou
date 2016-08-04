@@ -138,8 +138,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
             arrayList.add(kagerouCircle);
 
-            Log.d(TAG, "loadCircleDB sex: " + cursor.getString(cursor.getColumnIndex("sex")));
-            Log.d(TAG, "loadCircleDB age: " + cursor.getString(cursor.getColumnIndex("age")));
+            Log.d(TAG, "loadCircleDB radius: " + cursor.getString(cursor.getColumnIndex("radius")));
 //            Log.d(TAG, "loadCircleDB lat: " + cursor.getString(cursor.getColumnIndex("lat")));
 //            Log.d(TAG, "loadCircleDB move_to_y: " + cursor.getString(cursor.getColumnIndex("move_to_y")));
             isEof = cursor.moveToNext();
@@ -150,15 +149,23 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         return arrayList;
     }
 
-    public void updateCircleDB(SQLiteDatabase circleDB){
+    public void updateCircleDB(SQLiteDatabase circleDB) {
         Log.d(TAG, "updateCircleDB: in method");
 //        loadCircleDB(circleDB);
         String updateQuery = "update circles set lat = lat + move_to_y," +
-                "lng = lng + move_to_x;";
+                "lng = lng + move_to_x, radius = radius + 1;";
         circleDB.execSQL(updateQuery);
-        Log.d(TAG,"updateCircleDB: END");
+        Log.d(TAG, "updateCircleDB: END");
 //        loadCircleDB(circleDB);
     }
+
+    public void helpButtonPush(SQLiteDatabase circleDB, String circle_id){
+        Log.d(TAG,"helpButtonPush: START");
+        String helpButtonPushQuery = "update circles set radius = radius + 1 where circle_id = " + circle_id + ";";
+        circleDB.execSQL(helpButtonPushQuery);
+        Log.d(TAG, "helpButtonPush: END");
+    }
+
 
     public void resetCommentDB(SQLiteDatabase commentDB){
         Log.d(TAG, "resetCommentDB");

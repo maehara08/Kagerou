@@ -177,8 +177,12 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public void onStop() {
         super.onStop();
         stopFusedLocation();
-        mySQLiteOpenHelper.close();
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mySQLiteOpenHelper.close();
     }
 
     private void startFusedLocation() {

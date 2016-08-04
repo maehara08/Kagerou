@@ -2,8 +2,8 @@ package com.developers.hack.cs.kagerou.fragment;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,11 +19,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.developers.hack.cs.kagerou.R;
-import com.developers.hack.cs.kagerou.activity.BaseActivity;
+import com.developers.hack.cs.kagerou.util.MySQLiteOpenHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
@@ -38,6 +37,8 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.Random;
@@ -67,6 +68,9 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     private long lastLocationTime;
     private LatLng mNowLatLng;
     private Activity mContext;
+    private final String DB_NAME = "kagerou.db";
+    SQLiteDatabase mKagerouDB;
+    MySQLiteOpenHelper mySQLiteOpenHelper;
 
 
     private FragmentManager mFragmentManager;
@@ -107,6 +111,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         mLocationRequest.setFastestInterval(16);
 
         fusedLocationProviderApi = LocationServices.FusedLocationApi;
+        mySQLiteOpenHelper = new MySQLiteOpenHelper(getContext(), DB_NAME, null, 1);
+        mKagerouDB = mySQLiteOpenHelper.getWritableDatabase();
     }
 
     @Nullable
@@ -119,8 +125,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             public void onClick(View v) {
                 Log.d(TAG, "click fab");
                 Bundle bundle = new Bundle();
-                bundle.putString(getString(R.string.flagment_key_lat),String.valueOf(lat));
-                bundle.putString(getString(R.string.flagment_key_lng),String.valueOf(lng));
+                bundle.putString(getString(R.string.flagment_key_lat), String.valueOf(location.getLatitude()));
+                bundle.putString(getString(R.string.flagment_key_lng), String.valueOf(location.getLongitude()));
                 PostFragment postFragment = new PostFragment();
                 postFragment.setArguments(bundle);
                 getFragmentManager().beginTransaction()
@@ -171,6 +177,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public void onStop() {
         super.onStop();
         stopFusedLocation();
+        mySQLiteOpenHelper.close();
+
     }
 
     private void startFusedLocation() {
@@ -225,19 +233,19 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                 mTransaction.add(R.id.frame_container, new DetailFragment());
                 mTransaction.addToBackStack(null);
                 mTransaction.commit();
-                Log.d(TAG,"End of onClickCircle");
+                Log.d(TAG, "End of onClickCircle");
             }
         });
         circle = mMap.addCircle(circleOptions);
         circle.setClickable(true);
     }
 
-    void sendRequest(Location location){
+    void sendRequest(Location location) {
         OkHttpClient client = new OkHttpClient();
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         Request request = new Request.Builder()
-                .url(getString(R.string.endpoint)+"/maps/get_near/"+longitude+"/"+latitude)
+                .url(getString(R.string.endpoint) + "/maps/get_near/" + longitude + "/" + latitude)
                 .get()
                 .build();
         client.newCall(request).enqueue(new Callback() {
@@ -250,6 +258,14 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             public void onResponse(Call call, Response respxonse) throws IOException {
                 if (respxonse.isSuccessful()) {
                     Log.d(TAG, "成功");
+                    String jsonData = respxonse.body().string();
+                    mySQLiteOpenHelper.resetCircleTable(mKagerouDB);
+                    try {
+                        mySQLiteOpenHelper.insertCircleDB(jsonData, mKagerouDB);
+                        mySQLiteOpenHelper.loadCircleDB(mKagerouDB);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Log.d(TAG, "失敗");
                 }
@@ -259,10 +275,10 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         });
     }
 
-    void getComments(){
+    void getComments() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(getString(R.string.endpoint)+"/maps/get_comments/")
+                .url(getString(R.string.endpoint) + "/maps/get_comments/")
                 .get()
                 .build();
         client.newCall(request).enqueue(new Callback() {
@@ -283,7 +299,6 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             }
         });
     }
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {

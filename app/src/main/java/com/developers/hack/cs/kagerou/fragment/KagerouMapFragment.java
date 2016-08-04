@@ -157,6 +157,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                         .replace(R.id.frame_container, postFragment)
                         .addToBackStack(null)
                         .commit();
+//                Log.d(TAG,"updateCircleDB: start");
+//                mySQLiteOpenHelper.updateCircleDB(mKagerouDB);
 //                mFragmentManager = getFragmentManager();
 //                mTransaction = mFragmentManager.beginTransaction();
 //                mTransaction.add(R.id.frame_container, new PostFragment());
@@ -202,8 +204,12 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public void onStop() {
         super.onStop();
         stopFusedLocation();
-        mySQLiteOpenHelper.close();
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mySQLiteOpenHelper.close();
     }
 
     private void startFusedLocation() {
@@ -321,7 +327,14 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             public void onResponse(Call call, Response respxonse) throws IOException {
                 if (respxonse.isSuccessful()) {
                     Log.d(TAG, "getComments 成功");
-                    Log.d(TAG, "getComments END");
+                    String jsondata = respxonse.body().string();
+                    mySQLiteOpenHelper.resetCommentDB(mKagerouDB);
+                    try {
+                        mySQLiteOpenHelper.insertCommentDB(jsondata,mKagerouDB);
+                        mySQLiteOpenHelper.loadCommentDB(mKagerouDB);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Log.d(TAG, "getComments 失敗");
                 }

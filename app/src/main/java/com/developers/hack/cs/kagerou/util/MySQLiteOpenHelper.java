@@ -60,13 +60,15 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             String created_at = '"' + jsonObject.getString("created_at") + '"';
             double lng = jsonObject.getDouble("lng");
             double lat = jsonObject.getDouble("lat");
+            String sex = '"' + jsonObject.getString("sex") + '"';
+            int age = jsonObject.getInt("age");
             double distance = jsonObject.getDouble("distance");
 
             String query = String.format("INSERT INTO circles (name, user_id, circle_id, title, content, radius, move_to_x, move_to_y," +
-                            "help_count, view_count, from_merge, draw, created_at, lng, lat, distance) " +
-                            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",
+                            "help_count, view_count, from_merge, draw, created_at, lng, lat, sex, age, distance) " +
+                            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",
                     name, user_id, circle_id, title, content, radius, move_to_x, move_to_y, help_count,
-                    view_count, from_merge, draw, created_at, lng, lat, distance);
+                    view_count, from_merge, draw, created_at, lng, lat, sex, age, distance);
 
             Log.d(TAG, "insertCircleDB lng + " + lng);
             circleDB.execSQL(query);
@@ -91,6 +93,8 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
                 "created_at text," +
                 "lng blog not null," +
                 "lat blog not null," +
+                "sex text not null,"+
+                "age int not null," +
                 "distance blog not null" +
                 ");";
 
@@ -111,7 +115,9 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
                         "help_count",
                         "created_at",
                         "lng",
-                        "lat"
+                        "lat",
+                        "sex",
+                        "age"
                 }, null, null, null, null, "circle_id");
         // 参照先を一番始めに
         boolean isEof = cursor.moveToFirst();
@@ -132,12 +138,74 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
             arrayList.add(kagerouCircle);
 
+            Log.d(TAG, "loadCircleDB sex: " + cursor.getString(cursor.getColumnIndex("sex")));
+            Log.d(TAG, "loadCircleDB age: " + cursor.getString(cursor.getColumnIndex("age")));
+//            Log.d(TAG, "loadCircleDB lat: " + cursor.getString(cursor.getColumnIndex("lat")));
+//            Log.d(TAG, "loadCircleDB move_to_y: " + cursor.getString(cursor.getColumnIndex("move_to_y")));
             isEof = cursor.moveToNext();
         }
         // 忘れずに閉じる
         cursor.close();
         Log.d(TAG,"End LOAD");
         return arrayList;
+    }
+
+    public void updateCircleDB(SQLiteDatabase circleDB){
+        Log.d(TAG, "updateCircleDB: in method");
+//        loadCircleDB(circleDB);
+        String updateQuery = "update circles set lat = lat + move_to_y," +
+                "lng = lng + move_to_x;";
+        circleDB.execSQL(updateQuery);
+        Log.d(TAG,"updateCircleDB: END");
+//        loadCircleDB(circleDB);
+    }
+
+    public void resetCommentDB(SQLiteDatabase commentDB){
+        Log.d(TAG, "resetCommentDB");
+        String deleteQuery = "DROP TABLE IF EXISTS comments";
+        String resetQuery = "create table comments" + "(" +
+                "name text," +
+                "circle_id int," +
+                "comment_id int," +
+                "content text," +
+                "created_at text" +
+                ");";
+
+        commentDB.execSQL(deleteQuery);
+        commentDB.execSQL(resetQuery);
+    }
+
+    public void loadCommentDB(SQLiteDatabase commentDB){
+        Cursor cursor = commentDB.query(
+                "comments", new String[]{"name", "circle_id"}, null, null, null, null, "name");
+        // 参照先を一番始めに
+        boolean isEof = cursor.moveToFirst();
+        // データを取得していく
+        while (isEof) {
+            Log.d(TAG, "loadCommentDB + " + cursor.getString(cursor.getColumnIndex("name")));
+            isEof = cursor.moveToNext();
+        }
+        // 忘れずに閉じる
+        cursor.close();
+    }
+    public void insertCommentDB(String jsondata, SQLiteDatabase commentDB) throws JSONException {
+        JSONArray jsonArray = new JSONArray(jsondata);
+        
+        for(int i = 0; i < jsonArray.length(); i++){
+            Log.d(TAG, "insertCommentDB");
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String name = '"' + jsonObject.getString("name")+'"';
+            int circle_id = jsonObject.getInt("circle_id");
+            int comment_id = jsonObject.getInt("comment_id");
+            String content = '"' + jsonObject.getString("content") + '"';
+            String created_at = '"' + jsonObject.getString("created_at") + '"';
+
+            String query = String.format("insert into comments (name, circle_id, comment_id, content, created_at)" +
+                    "values(%s, %s, %s, %s, %s);",
+                    name, circle_id, comment_id, content, created_at);
+            Log.d(TAG,"insertCommentDB + " + name);
+            commentDB.execSQL(query);
+        }
     }
 
     @Override

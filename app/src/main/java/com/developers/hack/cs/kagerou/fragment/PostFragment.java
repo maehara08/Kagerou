@@ -1,11 +1,8 @@
 package com.developers.hack.cs.kagerou.fragment;
 
-import android.app.Activity;
-import android.app.DownloadManager;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,14 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.developers.hack.cs.kagerou.R;
-import com.developers.hack.cs.kagerou.activity.MainActivity;
-import com.developers.hack.cs.kagerou.activity.SignUpActivity;
 
 import java.io.IOException;
-import java.sql.SQLData;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -47,6 +40,8 @@ public class PostFragment extends Fragment {
 
     private static final String TAG = PostFragment.class.getSimpleName();
 
+    SharedPreferences pref;
+
     Button post;
 
     private FragmentManager mFragmentManager;
@@ -55,7 +50,6 @@ public class PostFragment extends Fragment {
     private EditText contentEditText;
     Bundle bundle = getArguments();
     private SQLiteDatabase circleDB;
-
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -96,12 +90,13 @@ public class PostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pref = this.getActivity().getSharedPreferences("kagerou", Context.MODE_PRIVATE);
         if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
             lng = getArguments().getString(getString(R.string.flagment_key_lng));
-            lat =getArguments().getString(getString(R.string.flagment_key_lat));
-            Log.d(TAG,"onCreate");
+            lat = getArguments().getString(getString(R.string.flagment_key_lat));
+            Log.d(TAG, "onCreate");
         }
     }
 
@@ -141,7 +136,7 @@ public class PostFragment extends Fragment {
     private void postCircle() {
 
         OkHttpClient client = new OkHttpClient();
-        final String userName = "TODO"; // TODO
+        final String userName = pref.getString(getString(R.string.login_user_name), "NONE"); // TODO
         final String title = titleEditText.getText().toString();
         final String content = contentEditText.getText().toString();
 //        final double longitude = bundle.getDouble("longitude");
@@ -175,7 +170,7 @@ public class PostFragment extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     removeThis();
-                    Log.d(TAG, lat + " " +lng);
+                    Log.d(TAG, lat + " " + lng);
                     showToast("投稿 成功");
                 } else {
                     showToast("投稿 失敗");

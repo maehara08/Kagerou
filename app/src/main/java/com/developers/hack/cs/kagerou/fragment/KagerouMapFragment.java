@@ -132,7 +132,26 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                     public void run() {
                         // ここに処理
                         createCircle();
-
+                        Log.d(TAG, "End createCircle");
+                        final Handler handler = new Handler();
+                        Timer timer = new Timer(false);
+                        timer.schedule(new TimerTask() {
+                                           @Override
+                                           public void run() {
+                                               handler.post(new Runnable() {
+                                                   @Override
+                                                   public void run() {
+                                                       for (int i = 0; i < circles.length; i++) {
+                                                           Log.d(TAG, "moveCircle: " + i + ",Lat:"+mCircleList.get(i).getLng()+ ",Lng:"+mCircleList.get(i).getLat());
+                                                           circles[i].setCenter(new LatLng(mCircleList.get(i).getLng(),mCircleList.get(i).getLat()));
+                                                       }
+                                                       mySQLiteOpenHelper.updateCircleDB(mKagerouDB);
+                                                       mCircleList = mySQLiteOpenHelper.loadCircleDB(mKagerouDB);
+                                                   }
+                                               });
+                                           }
+                                       },
+                                0, 10000);
                     }
                 });
             }
@@ -472,6 +491,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                         .strokeWidth(5)
                         .strokeColor(0xe1285577)
                         .fillColor(0xaa2f7b8e);
+
+                Log.d(TAG,mCircleList.get(i).getLng()+"と"+mCircleList.get(i).getLat());
 
 //                final CircleOptions circleOptions = new CircleOptions().center(new LatLng(lat, lng))
 //                        .radius(100)

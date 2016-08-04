@@ -60,6 +60,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             String created_at = '"' + jsonObject.getString("created_at") + '"';
             double lng = jsonObject.getDouble("lng");
             double lat = jsonObject.getDouble("lat");
+            Log.d(TAG,lng+"---"+lat);
             String sex = '"' + jsonObject.getString("sex") + '"';
             int age = jsonObject.getInt("age");
             double distance = jsonObject.getDouble("distance");
@@ -153,8 +154,8 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     public void updateCircleDB(SQLiteDatabase circleDB){
         Log.d(TAG, "updateCircleDB: in method");
 //        loadCircleDB(circleDB);
-        String updateQuery = "update circles set lat = lat + move_to_y," +
-                "lng = lng + move_to_x;";
+        String updateQuery = "update circles set lat = lat + move_to_y/10," +
+                "lng = lng + move_to_x/10;";
         circleDB.execSQL(updateQuery);
         Log.d(TAG,"updateCircleDB: END");
 //        loadCircleDB(circleDB);

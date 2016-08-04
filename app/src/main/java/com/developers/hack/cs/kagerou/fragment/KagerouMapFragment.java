@@ -141,11 +141,16 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                                                handler.post(new Runnable() {
                                                    @Override
                                                    public void run() {
+                                                       for (Circle myCircle: circles) {
+                                                           myCircle.remove();
+                                                       }
+                                                       createCircle();
                                                        for (int i = 0; i < circles.length; i++) {
                                                            Log.d(TAG, "moveCircle: " + i + ",Lat:" + mCircleList.get(i).getLng() + ",Lng:" + mCircleList.get(i).getLat());
                                                            circles[i].setCenter(new LatLng(mCircleList.get(i).getLng(), mCircleList.get(i).getLat()));
                                                        }
                                                        mySQLiteOpenHelper.updateCircleDB(mKagerouDB);
+                                                       mySQLiteOpenHelper.hitCircle(mKagerouDB);
                                                        mCircleList = mySQLiteOpenHelper.loadCircleDB(mKagerouDB);
                                                    }
                                                });
@@ -224,9 +229,12 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public void onStop() {
         super.onStop();
         stopFusedLocation();
-        for (int i = 0; circles.length > i; i++) {
-            circles[i].remove();
+        for (Circle myCircle: circles) {
+            myCircle.remove();
         }
+//        for (int i = 0; circles.length > i; i++) {
+//            circles[i].remove();
+//        }
     }
 
     @Override

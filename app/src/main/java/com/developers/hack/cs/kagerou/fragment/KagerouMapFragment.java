@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -258,6 +259,31 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         });
     }
 
+    void getComments(){
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getString(R.string.endpoint)+"/maps/get_comments/")
+                .get()
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response respxonse) throws IOException {
+                if (respxonse.isSuccessful()) {
+                    Log.d(TAG, "getComments 成功");
+                } else {
+                    Log.d(TAG, "getComments 失敗");
+                }
+                respxonse.close();
+
+            }
+        });
+    }
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -286,7 +312,20 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             textLog += "Bearing=" + String.valueOf(location.getBearing()) + "\n";
             mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("Now"));
 
-            sendRequest(location);
+            new AsyncTask<Void, Void, String>() {
+
+                @Override
+                protected String doInBackground(Void... params) {
+                    sendRequest(location);
+                    getComments();
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(String s) {
+                    Log.d(TAG, "onPostExecute");
+                }
+            }.execute();
 
             Log.d(TAG, textLog);
         } else {

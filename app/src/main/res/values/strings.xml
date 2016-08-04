@@ -11,5 +11,9 @@
     <string name="login_judge">loginJudge</string>
     <string name="login_user_name">loginName</string>
     <string name="login_user_pass">loginPass</string>
+    <string name="post_title">title</string>
+    <string name="post_date">date</string>
+    <string name="post_name">name</string>
+    <string name="post_content">content</string>
     <!--<string name="endpoint">http://192.168.56.1:8080</string>-->
 </resources>

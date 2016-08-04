@@ -191,6 +191,8 @@ public class PostFragment extends Fragment {
 
     public void removeThis() {
         mTransaction.remove(this);
+        mTransaction.add(R.id.frame_container,new KagerouMapFragment());
+        mTransaction.addToBackStack(null);
         mTransaction.commit();
     }
 

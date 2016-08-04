@@ -4,11 +4,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.nfc.Tag;
 import android.util.Log;
+
+import com.developers.hack.cs.kagerou.model.KagerouCircle;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by admin on 2016/08/04.
@@ -17,10 +22,12 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String TAG = MySQLiteOpenHelper.class.getSimpleName();
     private String mDBName;
+    private OnLoadFinishListener mListener;
 
     public MySQLiteOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         mDBName = name;
+//        mListener=listener;
     }
 
     @Override
@@ -63,7 +70,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
                     name, user_id, circle_id, title, content, radius, move_to_x, move_to_y, help_count,
                     view_count, from_merge, draw, created_at, lng, lat, sex, age, distance);
 
-            Log.d(TAG, "insertCircleDB + " + name);
+            Log.d(TAG, "insertCircleDB lng + " + lng);
             circleDB.execSQL(query);
         }
     }
@@ -95,13 +102,42 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         circleDB.execSQL(resetQuery);
     }
 
-    public void loadCircleDB(SQLiteDatabase circleDB) {
+    public ArrayList<KagerouCircle> loadCircleDB(SQLiteDatabase circleDB) {
+        ArrayList<KagerouCircle> arrayList = new ArrayList<KagerouCircle>();
         Cursor cursor = circleDB.query(
-                "circles", new String[]{"name", "circle_id","lng","lat","sex","age"}, null, null, null, null, "circle_id");
+                "circles", new String[]{
+                        "name",
+                        "user_id",
+                        "circle_id",
+                        "title",
+                        "content",
+                        "radius",
+                        "help_count",
+                        "created_at",
+                        "lng",
+                        "lat",
+                        "sex",
+                        "age"
+                }, null, null, null, null, "circle_id");
         // 参照先を一番始めに
         boolean isEof = cursor.moveToFirst();
         // データを取得していく
         while (isEof) {
+            Log.d(TAG, "loadCircleDB + " + cursor.getString(cursor.getColumnIndex("name")));
+            KagerouCircle kagerouCircle = new KagerouCircle(
+                    cursor.getString(0),
+                    Integer.valueOf(cursor.getString(1)),
+                    Integer.valueOf(cursor.getString(2)),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    Integer.valueOf(cursor.getString(5)),
+                    Integer.valueOf(cursor.getString(6)),
+                    cursor.getString(7),
+                    Double.valueOf(cursor.getString(8)),
+                    Double.valueOf(cursor.getString(9)));
+
+            arrayList.add(kagerouCircle);
+
             Log.d(TAG, "loadCircleDB sex: " + cursor.getString(cursor.getColumnIndex("sex")));
             Log.d(TAG, "loadCircleDB age: " + cursor.getString(cursor.getColumnIndex("age")));
 //            Log.d(TAG, "loadCircleDB lat: " + cursor.getString(cursor.getColumnIndex("lat")));
@@ -110,6 +146,8 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         }
         // 忘れずに閉じる
         cursor.close();
+        Log.d(TAG,"End LOAD");
+        return arrayList;
     }
 
     public void updateCircleDB(SQLiteDatabase circleDB){
@@ -172,5 +210,9 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    }
+
+    public interface OnLoadFinishListener {
+        void onLoadFinish();
     }
 }

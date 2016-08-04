@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.developers.hack.cs.kagerou.R;
+import com.developers.hack.cs.kagerou.model.KagerouCircle;
 import com.developers.hack.cs.kagerou.util.MySQLiteOpenHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -41,6 +43,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -79,10 +82,13 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     private FloatingActionButton fab;
 
     private GoogleMap mMap;
+    private OnLoadFinishListener mListener;
     Circle circle;
 
     double lat = 35.6585805;
     double lng = 139.7454329;
+    private Handler mHandler;
+    ArrayList<KagerouCircle> mCircleList;
 
     public static KagerouMapFragment getInstance() {
         KagerouMapFragment kagerouMapFragment = new KagerouMapFragment();
@@ -95,6 +101,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         mContext = getActivity();
+        mHandler = new Handler(Looper.getMainLooper());
         SupportMapFragment supportMapFragment = new SupportMapFragment();
         getChildFragmentManager().beginTransaction().add(R.id.container, supportMapFragment).commit();
         supportMapFragment.getMapAsync(this);
@@ -113,6 +120,23 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         fusedLocationProviderApi = LocationServices.FusedLocationApi;
         mySQLiteOpenHelper = new MySQLiteOpenHelper(getContext(), DB_NAME, null, 1);
         mKagerouDB = mySQLiteOpenHelper.getWritableDatabase();
+        mListener = new OnLoadFinishListener() {
+
+            @Override
+            public void onLoadFinish() {
+// もしくはLooperでメインスレッドを指定して生成
+                mHandler = new Handler(Looper.getMainLooper());
+
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // ここに処理
+                        createCircle();
+
+                    }
+                });
+            }
+        };
     }
 
     @Nullable
@@ -130,7 +154,8 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                 PostFragment postFragment = new PostFragment();
                 postFragment.setArguments(bundle);
                 getFragmentManager().beginTransaction()
-                        .add(R.id.container, postFragment)
+                        .replace(R.id.frame_container, postFragment)
+                        .addToBackStack(null)
                         .commit();
 //                Log.d(TAG,"updateCircleDB: start");
 //                mySQLiteOpenHelper.updateCircleDB(mKagerouDB);
@@ -230,21 +255,24 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                 .strokeWidth(5)
                 .strokeColor(0xe1285577)
                 .fillColor(0xaa2f7b8e);
-        mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
-            @Override
-            public void onCircleClick(Circle circle) {
-                Log.d(TAG, "onClickCircle");
-                mFragmentManager = getFragmentManager();
-                mTransaction = mFragmentManager.beginTransaction();
-                mTransaction.add(R.id.frame_container, new DetailFragment());
-                mTransaction.addToBackStack(null);
-                mTransaction.commit();
-                Log.d(TAG, "End of onClickCircle");
-            }
-        });
+//        mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+//            @Override
+//            public void onCircleClick(Circle circle) {
+//                Log.d(TAG, "onClickCircle");
+//                mFragmentManager = getFragmentManager();
+//                mTransaction = mFragmentManager.beginTransaction();
+//                mTransaction.add(R.id.frame_container, new DetailFragment());
+//                mTransaction.addToBackStack(null);
+//                mTransaction.commit();
+//
+//                Log.d(TAG, "End of onClickCircle"+circle.getId()+"-----"+circle.getZIndex());
+//            }
+//        });
         circle = mMap.addCircle(circleOptions);
         circle.setClickable(true);
     }
+
+    String jsonDataString;
 
     void sendRequest(Location location) {
         OkHttpClient client = new OkHttpClient();
@@ -264,11 +292,13 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             public void onResponse(Call call, Response respxonse) throws IOException {
                 if (respxonse.isSuccessful()) {
                     Log.d(TAG, "成功");
-                    String jsonData = respxonse.body().string();
+                    jsonDataString = respxonse.body().string();
                     mySQLiteOpenHelper.resetCircleTable(mKagerouDB);
                     try {
-                        mySQLiteOpenHelper.insertCircleDB(jsonData, mKagerouDB);
-                        mySQLiteOpenHelper.loadCircleDB(mKagerouDB);
+                        mySQLiteOpenHelper.insertCircleDB(jsonDataString, mKagerouDB);
+                        mCircleList = mySQLiteOpenHelper.loadCircleDB(mKagerouDB);
+                        mListener.onLoadFinish();
+                        Log.d(TAG, "onResponse: END");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -341,20 +371,25 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
             textLog += "Bearing=" + String.valueOf(location.getBearing()) + "\n";
             mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("Now"));
 
-            new AsyncTask<Void, Void, String>() {
+//            new AsyncTask<Void, Void, String>() {
+//
+//                @Override
+//                protected String doInBackground(Void... params) {
+            sendRequest(location);
+            getComments();
 
-                @Override
-                protected String doInBackground(Void... params) {
-                    sendRequest(location);
-                    getComments();
-                    return null;
-                }
+//                    Log.d(TAG, "doInBackground: ");
+//                    return null;
+//                }
+//
+//                @Override
+//                protected void onPostExecute(String s) {
+            Log.d(TAG, "onPostExecute");
 
-                @Override
-                protected void onPostExecute(String s) {
-                    Log.d(TAG, "onPostExecute");
-                }
-            }.execute();
+
+//                }
+//            }.execute();
+
 
             Log.d(TAG, textLog);
         } else {
@@ -420,5 +455,96 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
         } else {
             mResolvingError = true;
         }
+    }
+
+    Circle[] circles;
+
+    public void createCircle() {
+        //circle
+        Log.d(TAG, "createCircle: ");
+        circles = new Circle[mCircleList.size()];
+        if (mCircleList != null) {
+            for (int i = 0; i < mCircleList.size(); i++) {
+                Log.d(TAG, "createCircle: " + i);
+                final CircleOptions circleOptions = new CircleOptions()
+                        .center(new LatLng(mCircleList.get(i).getLng(), mCircleList.get(i).getLat()))
+                        .radius(mCircleList.get(i).getRadius() * 20)
+                        .strokeWidth(5)
+                        .strokeColor(0xe1285577)
+                        .fillColor(0xaa2f7b8e);
+
+//                final CircleOptions circleOptions = new CircleOptions().center(new LatLng(lat, lng))
+//                        .radius(100)
+//                        .strokeWidth(5)
+//                        .strokeColor(0xe1285577)
+//                        .fillColor(0xaa2f7b8e);
+                final ArrayList<KagerouCircle> CircleList = mCircleList;
+                final KagerouCircle kagerouCircle = mCircleList.get(i);
+                Circle circleTemp;
+
+                circleTemp = mMap.addCircle(circleOptions);
+                circleTemp.setClickable(true);
+                circleTemp.setZIndex(i);
+                circles[i] = circleTemp;
+            }
+            mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+                    @Override
+                    public void onCircleClick(Circle circle) {
+                        Log.d(TAG, "onClickCircle");
+                        int zIndex = (int)circle.getZIndex();
+                        String title = mCircleList.get(zIndex).getTitle();
+                        String date = mCircleList.get(zIndex).getCreated_at();
+                        String name = mCircleList.get(zIndex).getName();
+                        String content = mCircleList.get(zIndex).getContent();
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString(getString(R.string.post_title), title);
+                        bundle.putString(getString(R.string.post_date), date);
+                        bundle.putString(getString(R.string.post_name), name);
+                        bundle.putString(getString(R.string.post_content), content);
+                        DetailFragment detailFragment = new DetailFragment();
+                        detailFragment.setArguments(bundle);
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.frame_container, detailFragment)
+                                .addToBackStack(null)
+                                .commit();
+
+//                        mFragmentManager = getFragmentManager();
+//                        mTransaction = mFragmentManager.beginTransaction();
+//                        mTransaction.add(R.id.frame_container, new DetailFragment());
+//                        mTransaction.addToBackStack(null);
+//                        mTransaction.commit();
+                        Log.d(TAG, "End of onClickCircle");
+                    }
+                });
+//            for (int i = 0; i < 19; i++) {
+//                final CircleOptions circleOptions = new CircleOptions()
+//                        .center(new LatLng(lat, lng))
+//                        .radius(100)
+//                        .strokeWidth(5)
+//                        .strokeColor(0xe1285577)
+//                        .fillColor(0xaa2f7b8e);
+//                mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+//                    @Override
+//                    public void onCircleClick(Circle circle) {
+//                        Log.d(TAG, "onClickCircle");
+//                        mFragmentManager = getFragmentManager();
+//                        mTransaction = mFragmentManager.beginTransaction();
+//                        mTransaction.add(R.id.frame_container, new DetailFragment());
+//                        mTransaction.addToBackStack(null);
+//                        mTransaction.commit();
+//                        Log.d(TAG, "End of onClickCircle");
+//                    }
+//                });
+//                circle = mMap.addCircle(circleOptions);
+//                circle.setClickable(true);
+//            }
+//        } else {
+//            Log.d(TAG, "createCircle: isNull");
+//        }
+        }}
+
+    public interface OnLoadFinishListener {
+        void onLoadFinish();
     }
 }

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.developers.hack.cs.kagerou.R;
 import com.developers.hack.cs.kagerou.activity.MesuredListView;
@@ -25,6 +26,15 @@ public class DetailFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String title;
+    private String date;
+    private String name;
+    private String content;
+
+    TextView titleTextView;
+    TextView dateTextView;
+    TextView nameTextView;
+    TextView contentTextView;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -62,6 +72,18 @@ public class DetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
+        titleTextView=(TextView)view.findViewById(R.id.title) ;
+        dateTextView=(TextView)view.findViewById(R.id.date) ;
+        nameTextView=(TextView)view.findViewById(R.id.username) ;
+        contentTextView=(TextView)view.findViewById(R.id.main_text) ;
+        title = getArguments().getString(getString(R.string.post_title));
+        date =getArguments().getString(getString(R.string.post_date));
+        name = getArguments().getString(getString(R.string.post_name));
+        content =getArguments().getString(getString(R.string.post_content));
+        titleTextView.setText(title);
+        dateTextView.setText(date);
+        nameTextView.setText(name);
+        contentTextView.setText(content);
         MesuredListView mesuredListView=(MesuredListView)view.findViewById(R.id.listView);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
         mesuredListView.setAdapter(adapter);

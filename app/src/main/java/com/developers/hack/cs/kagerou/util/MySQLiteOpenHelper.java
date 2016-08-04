@@ -53,13 +53,15 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             String created_at = '"' + jsonObject.getString("created_at") + '"';
             double lng = jsonObject.getDouble("lng");
             double lat = jsonObject.getDouble("lat");
+            String sex = '"' + jsonObject.getString("sex") + '"';
+            int age = jsonObject.getInt("age");
             double distance = jsonObject.getDouble("distance");
 
             String query = String.format("INSERT INTO circles (name, user_id, circle_id, title, content, radius, move_to_x, move_to_y," +
-                            "help_count, view_count, from_merge, draw, created_at, lng, lat, distance) " +
-                            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",
+                            "help_count, view_count, from_merge, draw, created_at, lng, lat, sex, age, distance) " +
+                            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",
                     name, user_id, circle_id, title, content, radius, move_to_x, move_to_y, help_count,
-                    view_count, from_merge, draw, created_at, lng, lat, distance);
+                    view_count, from_merge, draw, created_at, lng, lat, sex, age, distance);
 
             Log.d(TAG, "insertCircleDB + " + name);
             circleDB.execSQL(query);
@@ -84,6 +86,8 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
                 "created_at text," +
                 "lng blog not null," +
                 "lat blog not null," +
+                "sex text not null,"+
+                "age int not null," +
                 "distance blog not null" +
                 ");";
 
@@ -93,13 +97,13 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
     public void loadCircleDB(SQLiteDatabase circleDB) {
         Cursor cursor = circleDB.query(
-                "circles", new String[]{"name", "circle_id","lng","lat","move_to_x","move_to_y"}, null, null, null, null, "circle_id");
+                "circles", new String[]{"name", "circle_id","lng","lat","sex","age"}, null, null, null, null, "circle_id");
         // 参照先を一番始めに
         boolean isEof = cursor.moveToFirst();
         // データを取得していく
         while (isEof) {
-//            Log.d(TAG, "loadCircleDB lng: " + cursor.getString(cursor.getColumnIndex("lng")));
-//            Log.d(TAG, "loadCircleDB move_to_x: " + cursor.getString(cursor.getColumnIndex("move_to_x")));
+            Log.d(TAG, "loadCircleDB sex: " + cursor.getString(cursor.getColumnIndex("sex")));
+            Log.d(TAG, "loadCircleDB age: " + cursor.getString(cursor.getColumnIndex("age")));
 //            Log.d(TAG, "loadCircleDB lat: " + cursor.getString(cursor.getColumnIndex("lat")));
 //            Log.d(TAG, "loadCircleDB move_to_y: " + cursor.getString(cursor.getColumnIndex("move_to_y")));
             isEof = cursor.moveToNext();

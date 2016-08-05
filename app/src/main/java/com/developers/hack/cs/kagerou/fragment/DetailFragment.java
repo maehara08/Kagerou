@@ -1,10 +1,7 @@
 package com.developers.hack.cs.kagerou.fragment;
 
-import android.app.DownloadManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,8 +18,6 @@ import com.developers.hack.cs.kagerou.activity.MesuredListView;
 import com.developers.hack.cs.kagerou.util.MySQLiteOpenHelper;
 
 import java.io.IOException;
-import java.text.Normalizer;
-import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -98,18 +93,17 @@ public class DetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        titleTextView=(TextView)view.findViewById(R.id.title) ;
-        dateTextView=(TextView)view.findViewById(R.id.date) ;
-        nameTextView=(TextView)view.findViewById(R.id.username) ;
-        helpButton = (Button)view.findViewById(R.id.help_button);
-        contentTextView=(TextView)view.findViewById(R.id.main_text) ;
+        titleTextView = (TextView) view.findViewById(R.id.title);
+        dateTextView = (TextView) view.findViewById(R.id.date);
+        nameTextView = (TextView) view.findViewById(R.id.username);
+        helpButton = (Button) view.findViewById(R.id.help_button);
+        contentTextView = (TextView) view.findViewById(R.id.main_text);
 
-        title = getArguments().getString(getString(R.string.post_title));
-        date =getArguments().getString(getString(R.string.post_date));
-        name = getArguments().getString(getString(R.string.post_name));
-        content =getArguments().getString(getString(R.string.post_content));
-        circle_id = getArguments().getString(getString(R.string.post_circle_id));
-
+            title = getArguments().getString(getString(R.string.post_title));
+            date = getArguments().getString(getString(R.string.post_date));
+            name = getArguments().getString(getString(R.string.post_name));
+            content = getArguments().getString(getString(R.string.post_content));
+            circle_id = getArguments().getString(getString(R.string.post_circle_id));
         titleTextView.setText(title);
         dateTextView.setText(date);
         nameTextView.setText(name);
@@ -120,14 +114,14 @@ public class DetailFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: START");
                 Log.d(TAG, "onClick circle_id: " + circle_id);
-                mySQLiteOpenHelper.helpButtonPush(mKagerouDB,circle_id);
+                mySQLiteOpenHelper.helpButtonPush(mKagerouDB, circle_id);
                 Log.d(TAG, "onClick circle_id: " + circle_id);
                 postHelpPush();
 
                 new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... params) {
-                        Log.d(TAG,"postHelp");
+                        Log.d(TAG, "postHelp");
                         postHelpPush();
                         return null;
                     }
@@ -135,45 +129,46 @@ public class DetailFragment extends Fragment {
             }
         });
 
-        MesuredListView mesuredListView=(MesuredListView)view.findViewById(R.id.listView);
+        MesuredListView mesuredListView = (MesuredListView) view.findViewById(R.id.listView);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
         mesuredListView.setAdapter(adapter);
         for (int i = 0; i < 100; i++) {
             adapter.add("item = " + String.valueOf(i + 1));
-            Log.d(TAG,"TEST:make list");
+            Log.d(TAG, "TEST:make list");
         }
         return view;
     }
 
-    public void postHelpPush(){
+    public void postHelpPush() {
         OkHttpClient client = new OkHttpClient();
         final String circle_id = getArguments().getString(getString(R.string.post_circle_id));
-        if(circle_id == null){
-            Log.d(TAG,"circle_id null");
+        if (circle_id == null) {
+            Log.d(TAG, "circle_id null");
             return;
         }
 
         String result = null;
 
         RequestBody formBody = new FormBody.Builder()
-                .add("circle_id",circle_id)
+                .add("circle_id", circle_id)
                 .build();
         Request request = new Request.Builder()
-                .url(getString(R.string.endpoint)+"/maps/circle/help")
+                .url(getString(R.string.endpoint) + "/maps/circle/help")
                 .post(formBody)
                 .build();
-        Log.d(TAG,getString(R.string.endpoint));
+        Log.d(TAG, getString(R.string.endpoint));
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
             }
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if(response.isSuccessful()){
-                    Log.d(TAG,"postHelpPush 成功");
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "postHelpPush 成功");
                 }
-            response.close();
+                response.close();
             }
         });
     }
@@ -182,6 +177,7 @@ public class DetailFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
     }
+
     @Override
     public void onDetach() {
         super.onDetach();

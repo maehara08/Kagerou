@@ -2,6 +2,7 @@ package com.developers.hack.cs.kagerou.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.developers.hack.cs.kagerou.R;
@@ -351,7 +353,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                     mySQLiteOpenHelper.resetCommentDB(mKagerouDB);
                     try {
                         mySQLiteOpenHelper.insertCommentDB(jsondata, mKagerouDB);
-                        mySQLiteOpenHelper.loadCommentDB(mKagerouDB);
+//                        mySQLiteOpenHelper.loadCommentDB(mKagerouDB);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

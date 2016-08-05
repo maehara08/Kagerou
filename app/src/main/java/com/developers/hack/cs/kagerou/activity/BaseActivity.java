@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.developers.hack.cs.kagerou.R;
 import com.developers.hack.cs.kagerou.fragment.KagerouMapFragment;
+import com.developers.hack.cs.kagerou.fragment.MyCircleFragment;
 
 public class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
@@ -32,6 +33,9 @@ public class BaseActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.drawer_item_menu_notification:
                         Log.d(TAG,"drawer_item_menu_notification");
+                        FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
+                        transaction.add(R.id.container,new MyCircleFragment()).addToBackStack(null);
+                        transaction.commit();
                         break;
                     default:
                         break;

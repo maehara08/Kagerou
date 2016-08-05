@@ -183,18 +183,21 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         commentDB.execSQL(resetQuery);
     }
 
-    public void loadCommentDB(SQLiteDatabase commentDB){
+    public ArrayList<String> loadCommentDB(SQLiteDatabase commentDB){
+        ArrayList<String> arrayList=new ArrayList<String>();
         Cursor cursor = commentDB.query(
-                "comments", new String[]{"name", "circle_id"}, null, null, null, null, "name");
+                "comments", new String[]{"name", "circle_id","content"}, null, null, null, null, "name");
         // 参照先を一番始めに
         boolean isEof = cursor.moveToFirst();
         // データを取得していく
         while (isEof) {
-            Log.d(TAG, "loadCommentDB + " + cursor.getString(cursor.getColumnIndex("name")));
+            Log.d(TAG, "loadCommentDB + " + cursor.getString(cursor.getColumnIndex("content")));
+            arrayList.add(cursor.getString(cursor.getColumnIndex("content")));
             isEof = cursor.moveToNext();
         }
         // 忘れずに閉じる
         cursor.close();
+        return arrayList;
     }
     public void insertCommentDB(String jsondata, SQLiteDatabase commentDB) throws JSONException {
         JSONArray jsonArray = new JSONArray(jsondata);
@@ -211,7 +214,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             String query = String.format("insert into comments (name, circle_id, comment_id, content, created_at)" +
                     "values(%s, %s, %s, %s, %s);",
                     name, circle_id, comment_id, content, created_at);
-            Log.d(TAG,"insertCommentDB + " + name);
+            Log.d(TAG,"insertCommentDB + " + content);
             commentDB.execSQL(query);
         }
     }

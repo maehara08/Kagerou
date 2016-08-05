@@ -75,6 +75,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     MySQLiteOpenHelper mySQLiteOpenHelper;
     String jsonDataString;
     Circle[] circles;
+    int all = 0;
 
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
@@ -131,33 +132,39 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                     @Override
                     public void run() {
                         // ここに処理
-                        createCircle();
-                        Log.d(TAG, "End createCircle");
-                        final Handler handler = new Handler();
-                        Timer timer = new Timer(false);
-                        timer.schedule(new TimerTask() {
-                                           @Override
-                                           public void run() {
-                                               handler.post(new Runnable() {
+                            createCircle();
+                            for (Circle myCircle: circles) {
+                                myCircle.remove();
+                            }
+                            Log.d(TAG, "End createCircle");
+                            final Handler handler = new Handler();
+                            Timer timer = new Timer(false);
+//                            if(all == 0){
+                                timer.schedule(new TimerTask() {
                                                    @Override
                                                    public void run() {
-                                                       for (Circle myCircle: circles) {
-                                                           myCircle.remove();
-                                                       }
-                                                       createCircle();
-                                                       for (int i = 0; i < circles.length; i++) {
-                                                           Log.d(TAG, "moveCircle: " + i + ",Lat:" + mCircleList.get(i).getLng() + ",Lng:" + mCircleList.get(i).getLat());
-                                                           circles[i].setCenter(new LatLng(mCircleList.get(i).getLng(), mCircleList.get(i).getLat()));
-                                                       }
-                                                       mySQLiteOpenHelper.updateCircleDB(mKagerouDB);
-                                                       mySQLiteOpenHelper.hitCircle(mKagerouDB);
-                                                       mCircleList = mySQLiteOpenHelper.loadCircleDB(mKagerouDB);
+                                                       handler.post(new Runnable() {
+                                                           @Override
+                                                           public void run() {
+                                                               for (Circle myCircle: circles) {
+                                                                   myCircle.remove();
+                                                               }
+                                                               createCircle();
+                                                               for (int i = 0; i < circles.length; i++) {
+                                                                   Log.d(TAG, "moveCircle: " + i + ",Lat:" + mCircleList.get(i).getLng() + ",Lng:" + mCircleList.get(i).getLat());
+                                                                   circles[i].setCenter(new LatLng(mCircleList.get(i).getLng(), mCircleList.get(i).getLat()));
+                                                               }
+                                                               mySQLiteOpenHelper.updateCircleDB(mKagerouDB);
+                                                               mySQLiteOpenHelper.hitCircle(mKagerouDB);
+                                                               mCircleList = mySQLiteOpenHelper.loadCircleDB(mKagerouDB);
+                                                           }
+                                                       });
                                                    }
-                                               });
-                                           }
-                                       },
-                                0, 10000);
-                    }
+                                               },
+                                        0, 10000);
+
+                            }
+ //                   }
                 });
             }
         };
@@ -223,18 +230,22 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
     public void onStart() {
         super.onStart();
         startFusedLocation();
+        all = 0;
     }
-
     @Override
     public void onStop() {
         super.onStop();
         stopFusedLocation();
+        all = 1;
+        Log.d(TAG," onstop" + all);
         for (Circle myCircle: circles) {
             myCircle.remove();
         }
-//        for (int i = 0; circles.length > i; i++) {
-//            circles[i].remove();
-//        }
+        mySQLiteOpenHelper.resetCircleTable(mKagerouDB);
+        mySQLiteOpenHelper.loadCircleDB(mKagerouDB);
+        for (int i = 0; circles.length > i; i++) {
+            circles[i].remove();
+        }
     }
 
     @Override

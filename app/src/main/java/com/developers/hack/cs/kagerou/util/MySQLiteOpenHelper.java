@@ -165,7 +165,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     public void hitCircle(SQLiteDatabase circleDB){
         Log.d(TAG, "hitCircle: ");
         ArrayList<KagerouCircle> mCircleList = loadCircleDB(circleDB);
-        double n =1000.0;
+        double n =1500.0;
         Log.d(TAG, "hitCircle: size" + mCircleList.size());
         if(mCircleList != null){
             for(int i = 0; i < mCircleList.size(); i++){
@@ -193,6 +193,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
     public void helpButtonPush(SQLiteDatabase circleDB, String circle_id){
         Log.d(TAG,"helpButtonPush: START");
+
         String helpButtonPushQuery = "update circles set radius = radius + 1 where circle_id = " + circle_id + ";";
         circleDB.execSQL(helpButtonPushQuery);
         Log.d(TAG, "helpButtonPush: END");

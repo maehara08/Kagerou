@@ -215,9 +215,10 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         commentDB.execSQL(resetQuery);
     }
 
-    public void loadCommentDB(SQLiteDatabase commentDB){
+    public void loadCommentDBD(SQLiteDatabase commentDB){
+        ArrayList<String> arrayList=new ArrayList<String>();
         Cursor cursor = commentDB.query(
-                "comments", new String[]{"name", "circle_id"}, null, null, null, null, "name");
+                "comments", new String[]{"name", "circle_id",}, null, null, null, null, "name");
         // 参照先を一番始めに
         boolean isEof = cursor.moveToFirst();
         // データを取得していく
@@ -227,6 +228,25 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         }
         // 忘れずに閉じる
         cursor.close();
+    }
+    public ArrayList<String> loadCommentDB(SQLiteDatabase commentDB,String circle_id){
+        ArrayList<String> arrayList=new ArrayList<String>();
+        Cursor cursor = commentDB.query(
+                "comments", new String[]{"name", "circle_id","content"}, null, null, null, null, "name");
+        // 参照先を一番始めに
+        boolean isEof = cursor.moveToFirst();
+        // データを取得していく
+        while (isEof) {
+            Log.d(TAG, "loadCommentDB + " + cursor.getString(cursor.getColumnIndex("name")));
+            if(cursor.getString(cursor.getColumnIndex("circle_id")).equals(circle_id)) {
+                arrayList.add(cursor.getString(cursor.getColumnIndex("content")));
+                Log.d(TAG,"       "+cursor.getString(cursor.getColumnIndex("content")));
+            }
+            isEof = cursor.moveToNext();
+        }
+        // 忘れずに閉じる
+        cursor.close();
+        return arrayList;
     }
     public void insertCommentDB(String jsondata, SQLiteDatabase commentDB) throws JSONException {
         JSONArray jsonArray = new JSONArray(jsondata);

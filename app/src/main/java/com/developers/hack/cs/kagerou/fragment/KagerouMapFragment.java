@@ -371,7 +371,7 @@ public class KagerouMapFragment extends Fragment implements OnMapReadyCallback, 
                     mySQLiteOpenHelper.resetCommentDB(mKagerouDB);
                     try {
                         mySQLiteOpenHelper.insertCommentDB(jsondata, mKagerouDB);
-                        mySQLiteOpenHelper.loadCommentDB(mKagerouDB);
+                        mySQLiteOpenHelper.loadCommentDBD(mKagerouDB);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

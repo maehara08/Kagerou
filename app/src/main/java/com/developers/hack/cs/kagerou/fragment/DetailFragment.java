@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.developers.hack.cs.kagerou.R;
@@ -54,9 +55,13 @@ public class DetailFragment extends Fragment {
     TextView dateTextView;
     TextView nameTextView;
     TextView contentTextView;
+    String commnt;
+    EditText editText;
 
     Button helpButton;
     Button sendButton;
+
+    ArrayList<String> commentList;
 
     MySQLiteOpenHelper mySQLiteOpenHelper;
     SQLiteDatabase mKagerouDB;
@@ -105,6 +110,7 @@ public class DetailFragment extends Fragment {
         helpButton = (Button)view.findViewById(R.id.help_button);
         sendButton = (Button)view.findViewById(R.id.send_button);
         contentTextView=(TextView)view.findViewById(R.id.main_text) ;
+        editText = (EditText)view.findViewById(R.id.comment);
 
         title = getArguments().getString(getString(R.string.post_title));
         date =getArguments().getString(getString(R.string.post_date));
@@ -136,12 +142,12 @@ public class DetailFragment extends Fragment {
                 };
             }
         });
+
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                commnt=editText.getText().toString();
                 Log.d(TAG, "onClick: START");
-                Log.d(TAG, "onClick circle_id: " + circle_id);
-                mySQLiteOpenHelper.helpButtonPush(mKagerouDB,circle_id);
                 Log.d(TAG, "onClick circle_id: " + circle_id);
                 postsendPush();
 
@@ -156,15 +162,18 @@ public class DetailFragment extends Fragment {
             }
         });
 
-
-
         MesuredListView mesuredListView=(MesuredListView)view.findViewById(R.id.listView);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
         mesuredListView.setAdapter(adapter);
-        for (int i = 0; i < 100; i++) {
-            adapter.add("item = " + String.valueOf(i + 1));
-            Log.d(TAG,"TEST:make list");
+
+        ArrayList<String> comment = new ArrayList<String>();
+        comment=mySQLiteOpenHelper.loadCommentDB(mKagerouDB,circle_id);
+        if(comment!=null) {
+            for (int i = 0; i < comment.size(); i++) {
+                adapter.add(comment.get(i));
+            }
         }
+
         return view;
     }
 
@@ -175,16 +184,17 @@ public class DetailFragment extends Fragment {
             Log.d(TAG,"circle_id null");
             return;
         }
+        Log.d(TAG,commnt);
 
         String result = null;
 
         RequestBody formBody = new FormBody.Builder()
                 .add("name",name)
-                .add("content",content)
+                .add("content",commnt)
                 .add("circle_id",circle_id)
                 .build();
         Request request = new Request.Builder()
-                .url(getString(R.string.endpoint)+"/maps/circle/help")
+                .url(getString(R.string.endpoint)+"/maps/add_comment")
                 .post(formBody)
                 .build();
         Log.d(TAG,getString(R.string.endpoint));
